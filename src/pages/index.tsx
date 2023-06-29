@@ -1,7 +1,8 @@
-import { SignInButton, SignOutButton, UserButton, useUser } from "@clerk/nextjs";
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import logo from "~/assets/testlogo4.svg";
 import Head from "next/head";
-import Link from "next/link";
-import { api } from "~/utils/api";
+import { RouterOutputs, api } from "~/utils/api";
+import { dark } from "@clerk/themes";
 
 const NewPostButton = () => () => {
   const { user } = useUser();
@@ -14,11 +15,24 @@ const NewPostButton = () => () => {
 
 }
 
+type PostWithUser = RouterOutputs["posts"]["getAll"][number];
+const PostView = (props: PostWithUser) => {
+  const { post, author } = props;
+  return (
+    <div key={post.id} className="p-8 border-b">
+      {post.title}
+    </div>
+  )
+
+}
+
 export default function Home() {
 
   const user = useUser()
 
   const { data, isLoading } = api.posts.getAll.useQuery();
+
+
 
   if (isLoading) return (<div>Loading...</div>);
 
@@ -35,20 +49,31 @@ export default function Home() {
 
       <main className="flex justify-center h-screen">
         <div className="w-full md: max-w-5xl border-x">
-          <div className="border-b border-slate-400 p-4">
-            {!user.isSignedIn && <SignInButton />}
-            {!!user.isSignedIn && <UserButton
-              userProfileMode="navigation"
-              userProfileUrl={
-                typeof window !== "undefined"
-                  ? `${window.location.origin}/profile`
-                  : undefined
-              }
-            />}
+          <div className="flex flex-row border-b p-4">
+            <div className="w-full align-middle">
+              <img src={logo.src} alt='logo'></img>
+            </div>
+            <div className="flex w-full justify-end">
+              {!user.isSignedIn && <SignInButton />}
+              {!!user.isSignedIn && <UserButton
+                appearance={{
+                  baseTheme: dark,
+                  elements: {
+                    // TODO: CHANGE SIZE OF AVATAR
+                  }
+                }}
+                userProfileMode="navigation"
+                userProfileUrl={
+                  typeof window !== "undefined"
+                    ? `${window.location.origin}/profile`
+                    : undefined
+                }
+              />}
+            </div>
           </div>
           <div className="flex flex-col">
-            {data?.map((post) => (
-              <div key={post.id} className="p-8 border-b">{post.title}</div>)) ?? <div>Loading...</div>}
+            {data?.map(({ post, author }) => (
+              <PostView post={post} author={author}/>)) ?? <div>Loading...</div>}
           </div>
         </div>
       </main>
