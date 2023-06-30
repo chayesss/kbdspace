@@ -2,6 +2,7 @@ import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import Head from "next/head";
 import { type RouterOutputs, api } from "~/utils/api";
 import { dark } from "@clerk/themes";
+import Image from "next/image";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
@@ -25,7 +26,13 @@ const PostView = (props: PostWithUser) => {
   return (
     <div key={post.id} className="p-8 border-b flex flex-row gap-4">
       <div>
-        <img src={author.profileImageUrl} alt="pfp" className="rounded-full w-12 h-12" />
+        <Image
+          src={author.profileImageUrl}
+          alt="pfp"
+          className="rounded-full w-12 h-12"
+          width={48}
+          height={48}
+        />
       </div>
       <div>
         <div className="text-xl font-semibold">

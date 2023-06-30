@@ -8,6 +8,11 @@ await import("./src/env.mjs");
 const config = {
   reactStrictMode: true,
 
+  //authorize clerk
+  images: {
+    domains: ["images.clerk.dev"],
+  },
+
   /**
    * If you have `experimental: { appDir: true }` set, then you must comment the below `i18n` config
    * out.
