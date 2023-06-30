@@ -1,6 +1,4 @@
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
-import Image from "next/image";
-import logo from "~/assets/testlogo4.svg";
 import Head from "next/head";
 import { type RouterOutputs, api } from "~/utils/api";
 import { dark } from "@clerk/themes";
