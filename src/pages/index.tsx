@@ -1,19 +1,20 @@
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import Image from "next/image";
 import logo from "~/assets/testlogo4.svg";
 import Head from "next/head";
-import { RouterOutputs, api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/utils/api";
 import { dark } from "@clerk/themes";
 
-const NewPostButton = () => () => {
-  const { user } = useUser();
+// const NewPostButton = () => () => {
+//   const { user } = useUser();
 
-  if (!user) return null;
+//   if (!user) return null;
 
-  return <div>
-    <img src={user.profileImageUrl} alt='pfp' />
-  </div>
+//   return <div>
+//     <img src={user.profileImageUrl} alt='pfp' />
+//   </div>
 
-}
+// }
 
 type PostWithUser = RouterOutputs["posts"]["getAll"][number];
 const PostView = (props: PostWithUser) => {
@@ -51,7 +52,7 @@ export default function Home() {
         <div className="w-full md: max-w-5xl border-x">
           <div className="flex flex-row border-b p-4">
             <div className="w-full align-middle">
-              <img src={logo.src} alt='logo'></img>
+              <h1 className="text-2xl font-bold tracking-widest">kbdspace</h1>
             </div>
             <div className="flex w-full justify-end">
               {!user.isSignedIn && <SignInButton />}
@@ -72,8 +73,8 @@ export default function Home() {
             </div>
           </div>
           <div className="flex flex-col">
-            {data?.map(({ post, author }) => (
-              <PostView post={post} author={author}/>)) ?? <div>Loading...</div>}
+            {data?.map((fullPost) => (
+              <PostView {...fullPost} key={fullPost.post.id} />)) ?? <div>Loading...</div>}
           </div>
         </div>
       </main>
