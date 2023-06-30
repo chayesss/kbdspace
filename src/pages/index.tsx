@@ -3,6 +3,10 @@ import Head from "next/head";
 import { type RouterOutputs, api } from "~/utils/api";
 import { dark } from "@clerk/themes";
 
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime"
+dayjs.extend(relativeTime);
+
 // const NewPostButton = () => () => {
 //   const { user } = useUser();
 
@@ -15,11 +19,23 @@ import { dark } from "@clerk/themes";
 // }
 
 type PostWithUser = RouterOutputs["posts"]["getAll"][number];
+
 const PostView = (props: PostWithUser) => {
   const { post, author } = props;
   return (
-    <div key={post.id} className="p-8 border-b">
-      {post.title}
+    <div key={post.id} className="p-8 border-b flex flex-row gap-4">
+      <div>
+        <img src={author.profileImageUrl} alt="pfp" className="rounded-full w-12 h-12" />
+      </div>
+      <div>
+        <div className="text-xl font-semibold">
+          <span>{post.title}</span>
+        </div>
+        <div className="flex flex-row gap-1">
+          <span className="font-semibold">@{author.username}</span>
+          <span className="font-thin">{` - ${dayjs(post.createdAt).fromNow()}`}</span>
+        </div>
+      </div>
     </div>
   )
 
@@ -32,7 +48,7 @@ export default function Home() {
   const { data, isLoading } = api.posts.getAll.useQuery();
 
 
-
+  // TODO: REPLACE WITH LOADING COMPONENT
   if (isLoading) return (<div>Loading...</div>);
 
   if (!data) return (<div>Something went wrong...</div>);
