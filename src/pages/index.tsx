@@ -4,20 +4,27 @@ import { type RouterOutputs, api } from "~/utils/api";
 import { dark } from "@clerk/themes";
 import Image from "next/image";
 
+import { LoadingSpinner } from "~/components/loading";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
+import { PostButton } from "~/components/postbutton";
 dayjs.extend(relativeTime);
 
-// const NewPostButton = () => () => {
-//   const { user } = useUser();
+const PostsManager = () => {
+  const user = useUser();
 
-//   if (!user) return null;
+  // TODO: ADD SORT METHOD 
+  if (!!user.isSignedIn) {
+    return (
+      <PostButton name=" + Create Post" />
+    )
+  } else if (!user.isSignedIn) {
+    return (
+      <span>You must be signed in to create a post!</span>
+    )
+  }
 
-//   return <div>
-//     <img src={user.profileImageUrl} alt='pfp' />
-//   </div>
-
-// }
+};
 
 type PostWithUser = RouterOutputs["posts"]["getAll"][number];
 
@@ -39,8 +46,8 @@ const PostView = (props: PostWithUser) => {
           <span>{post.title}</span>
         </div>
         <div className="flex flex-row gap-1">
-          <span className="font-semibold">@{author.username}</span>
-          <span className="font-thin">{` - ${dayjs(post.createdAt).fromNow()}`}</span>
+          <span className="font-semibold">@{author.username} · </span>
+          <span className="font-thin">{`  ${dayjs(post.createdAt).fromNow()}`}</span>
         </div>
       </div>
     </div>
@@ -48,17 +55,38 @@ const PostView = (props: PostWithUser) => {
 
 }
 
+
+
+
+
+const FrontPage = () => {
+
+  const {data} = api.posts.getAll.useQuery();
+
+  if (!data) return <div>Something when run</div>;
+
+  return (
+    <div className="flex flex-col">
+      {data?.map((fullPost) => (
+        <PostView {...fullPost} key={fullPost.post.id} />)) ?? <LoadingSpinner />}
+    </div>
+  )
+};
+
+
+
+
 export default function Home() {
 
-  const user = useUser()
+  const { user, isLoaded: userLoaded, isSignedIn } = useUser();
 
-  const { data, isLoading } = api.posts.getAll.useQuery();
+  // start fetching posts
+  api.posts.getAll.useQuery();
+
+  // return empty div if user not loaded
+  if (!userLoaded) return  <LoadingSpinner />;
 
 
-  // TODO: REPLACE WITH LOADING COMPONENT
-  if (isLoading) return (<div>Loading...</div>);
-
-  if (!data) return (<div>Something went wrong...</div>);
 
   return (
     <>
@@ -76,8 +104,8 @@ export default function Home() {
               <h1 className="text-2xl font-bold tracking-widest">kbdspace</h1>
             </div>
             <div className="flex w-full justify-end">
-              {!user.isSignedIn && <SignInButton />}
-              {!!user.isSignedIn && <UserButton
+              {!isSignedIn && <SignInButton />}
+              {!!isSignedIn && <UserButton
                 appearance={{
                   baseTheme: dark,
                   elements: {
@@ -93,10 +121,10 @@ export default function Home() {
               />}
             </div>
           </div>
-          <div className="flex flex-col">
-            {data?.map((fullPost) => (
-              <PostView {...fullPost} key={fullPost.post.id} />)) ?? <div>Loading...</div>}
+          <div className="flex flex-row border-b p-4 justify-end">
+            <PostsManager />
           </div>
+              <FrontPage />
         </div>
       </main>
     </>
