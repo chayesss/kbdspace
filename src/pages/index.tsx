@@ -10,6 +10,9 @@ import relativeTime from "dayjs/plugin/relativeTime"
 import { PostButton } from "~/components/postbutton";
 dayjs.extend(relativeTime);
 
+
+
+// section with sort by, filter, and create post button
 const PostsManager = () => {
   const user = useUser();
 
@@ -26,8 +29,11 @@ const PostsManager = () => {
 
 };
 
-type PostWithUser = RouterOutputs["posts"]["getAll"][number];
 
+
+
+type PostWithUser = RouterOutputs["posts"]["getAll"][number];
+//creates individual post view
 const PostView = (props: PostWithUser) => {
   const { post, author } = props;
   return (
@@ -58,12 +64,12 @@ const PostView = (props: PostWithUser) => {
 
 
 
-
+// section with all posts
 const FrontPage = () => {
 
-  const {data} = api.posts.getAll.useQuery();
+  const { data } = api.posts.getAll.useQuery();
 
-  if (!data) return <div>Something when run</div>;
+  if (!data) return <LoadingSpinner />;
 
   return (
     <div className="flex flex-col">
@@ -84,7 +90,7 @@ export default function Home() {
   api.posts.getAll.useQuery();
 
   // return empty div if user not loaded
-  if (!userLoaded) return  <LoadingSpinner />;
+  if (!userLoaded) return <LoadingSpinner />;
 
 
 
@@ -100,31 +106,44 @@ export default function Home() {
       <main className="flex justify-center h-screen">
         <div className="w-full md: max-w-5xl border-x">
           <div className="flex flex-row border-b p-4">
-            <div className="w-full align-middle">
+            <div className="w-full flex self-center">
               <h1 className="text-2xl font-bold tracking-widest">kbdspace</h1>
             </div>
             <div className="flex w-full justify-end">
-              {!isSignedIn && <SignInButton />}
-              {!!isSignedIn && <UserButton
-                appearance={{
-                  baseTheme: dark,
-                  elements: {
-                    // TODO: CHANGE SIZE OF AVATAR
+              <div className="flex flex-row gap-3">
+                <div className="flex flex-col text-right">
+                  {!!isSignedIn && <span className="font-semibold">{user.fullName}</span>}
+                  {!!isSignedIn && <span className="font-light">@{user.username}</span>}
+                </div>
+                <div className="flex self-center">
+                {!isSignedIn && <SignInButton />}
+                {!!isSignedIn && <UserButton
+                  appearance={{
+                    baseTheme: dark,
+                    elements: {
+                      avatarBox: 
+                        "w-12 h-12",
+                    }
+                  }}
+                  userProfileMode="navigation"
+                  userProfileUrl={
+                    typeof window !== "undefined"
+                      ? `${window.location.origin}/profile`
+                      : undefined
                   }
-                }}
-                userProfileMode="navigation"
-                userProfileUrl={
-                  typeof window !== "undefined"
-                    ? `${window.location.origin}/profile`
-                    : undefined
-                }
-              />}
+                />}
+                </div>
+                
+              </div>
+
             </div>
           </div>
           <div className="flex flex-row border-b p-4 justify-end">
             <PostsManager />
           </div>
-              <FrontPage />
+          <div>
+            <FrontPage />
+          </div>
         </div>
       </main>
     </>
