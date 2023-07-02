@@ -7,7 +7,7 @@ import Image from "next/image";
 import { LoadingSpinner } from "~/components/loading";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
-import { PostButton } from "~/components/postbutton";
+import { MyButton } from "~/components/custombutton";
 dayjs.extend(relativeTime);
 
 
@@ -19,7 +19,7 @@ const PostsManager = () => {
   // TODO: ADD SORT METHOD 
   if (!!user.isSignedIn) {
     return (
-      <PostButton name=" + Create Post" />
+      <MyButton name=" + Create Post" />
     )
   } else if (!user.isSignedIn) {
     return (
