@@ -15,13 +15,26 @@ dayjs.extend(relativeTime);
 // create post form with title, content, and submit button
 const CreatePostForm = () => {
 
-    const { mutate } = api.posts.create.useMutation();
+    const ctx = api.useContext();
+
+    //TODO: REDIRECT TO HOME PAGE AFTER POSTING
+    const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
+        onSuccess: () => {
+
+            setTitle("");
+            setContent("");
+
+            void ctx.posts.getAll.invalidate();
+            
+        }
+    });
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
     return (
         <div className="flex flex-col gap-4">
+            <h1 className="text-3xl font-bold">Create Post</h1>
             <label className="text-2xl  font-semibold" htmlFor="title">Title</label>
             <input
                 className="border-2 border-gray-300 bg-transparent rounded-md"
@@ -29,6 +42,7 @@ const CreatePostForm = () => {
                 placeholder=" Title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                disabled={isPosting}
             />
             <label className="text-2xl font-semibold" htmlFor="content">Content</label>
             <textarea
@@ -36,6 +50,7 @@ const CreatePostForm = () => {
                 placeholder=" Content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
+                disabled={isPosting}
             />
             <MyButton name="Post" onClick={() => mutate({ title: title, content: content })}></MyButton>
         </div>

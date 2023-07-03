@@ -3,6 +3,7 @@ import Head from "next/head";
 import { type RouterOutputs, api } from "~/utils/api";
 import { dark } from "@clerk/themes";
 import Image from "next/image";
+import Link from "next/link"
 
 import { LoadingSpinner } from "~/components/loading";
 import dayjs from "dayjs";
@@ -19,7 +20,9 @@ const PostsManager = () => {
   // TODO: ADD SORT METHOD 
   if (!!user.isSignedIn) {
     return (
-      <MyButton name=" + Create Post" />
+      <Link href={`/createpost`}>
+        <MyButton name="Create Post"></MyButton>
+      </Link>
     )
   } else if (!user.isSignedIn) {
     return (
@@ -69,12 +72,11 @@ const FrontPage = () => {
 
   const { data } = api.posts.getAll.useQuery();
 
-  if (!data) return <LoadingSpinner />;
 
   return (
     <div className="flex flex-col">
       {data?.map((fullPost) => (
-        <PostView {...fullPost} key={fullPost.post.id} />)) ?? <LoadingSpinner />}
+        <PostView {...fullPost} key={fullPost.post.id} />))}
     </div>
   )
 };
