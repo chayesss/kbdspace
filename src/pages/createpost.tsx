@@ -25,7 +25,7 @@ const CreatePostForm = () => {
             setContent("");
 
             void ctx.posts.getAll.invalidate();
-            
+
         }
     });
 
@@ -33,7 +33,7 @@ const CreatePostForm = () => {
     const [content, setContent] = useState("");
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="p-8 border rounded-lg flex flex-col gap-4 w-full h-full">
             <h1 className="text-3xl font-bold">Create Post</h1>
             <label className="text-2xl  font-semibold" htmlFor="title">Title</label>
             <input
@@ -79,9 +79,9 @@ export default function Home() {
             </Head>
 
 
-            <main className="flex justify-center h-screen">
-                <div className="w-full md: max-w-5xl border-x">
-                    <div className="flex flex-row border-b p-4">
+            <main className="flex flex-col sm:flex-row justify-center h-screen  gap-4 m-2">
+                <div className="border h-screen rounded-lg sticky top-0">
+                    <div className="flex flex-row  p-4">
                         <div className="w-full flex self-center">
                             <h1 className="text-2xl font-bold tracking-widest">kbdspace</h1>
                         </div>
@@ -114,7 +114,9 @@ export default function Home() {
 
                         </div>
                     </div>
-                    <div className="flex flex-col border-b p-4">
+                </div>
+                <div className="w-full md: max-w-5xl ">
+                    <div className="flex flex-row p-4">
                         <CreatePostForm />
                     </div>
                 </div>

@@ -40,7 +40,7 @@ type PostWithUser = RouterOutputs["posts"]["getAll"][number];
 const PostView = (props: PostWithUser) => {
   const { post, author } = props;
   return (
-    <div key={post.id} className="p-8 border-b flex flex-row gap-4">
+    <div key={post.id} className="p-8 border rounded-lg flex flex-row gap-4">
       <div>
         <Image
           src={author.profileImageUrl}
@@ -74,7 +74,7 @@ const FrontPage = () => {
 
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-4">
       {data?.map((fullPost) => (
         <PostView {...fullPost} key={fullPost.post.id} />))}
     </div>
@@ -105,9 +105,9 @@ export default function Home() {
       </Head>
 
 
-      <main className="flex justify-center h-screen">
-        <div className="w-full md: max-w-5xl border-x">
-          <div className="flex flex-row border-b p-4">
+      <main className="flex flex-col sm:flex-row justify-center h-full gap-4 m-2">
+        <div className="border h-screen rounded-lg sticky top-0">
+          <div className="flex flex-row  p-4">
             <div className="w-full flex self-center">
               <h1 className="text-2xl font-bold tracking-widest">kbdspace</h1>
             </div>
@@ -118,29 +118,32 @@ export default function Home() {
                   {!!isSignedIn && <span className="font-light">@{user.username}</span>}
                 </div>
                 <div className="flex self-center">
-                {!isSignedIn && <SignInButton />}
-                {!!isSignedIn && <UserButton
-                  appearance={{
-                    baseTheme: dark,
-                    elements: {
-                      avatarBox: 
-                        "w-12 h-12",
+                  {!isSignedIn && <SignInButton />}
+                  {!!isSignedIn && <UserButton
+                    appearance={{
+                      baseTheme: dark,
+                      elements: {
+                        avatarBox:
+                          "w-12 h-12",
+                      }
+                    }}
+                    userProfileMode="navigation"
+                    userProfileUrl={
+                      typeof window !== "undefined"
+                        ? `${window.location.origin}/profile`
+                        : undefined
                     }
-                  }}
-                  userProfileMode="navigation"
-                  userProfileUrl={
-                    typeof window !== "undefined"
-                      ? `${window.location.origin}/profile`
-                      : undefined
-                  }
-                />}
+                  />}
                 </div>
-                
+
               </div>
 
             </div>
           </div>
-          <div className="flex flex-row border-b p-4 justify-end">
+        </div>
+        <div className="w-full md: max-w-5xl ">
+
+          <div className="flex flex-row p-4 justify-end">
             <PostsManager />
           </div>
           <div>
