@@ -31,28 +31,46 @@ const CreatePostForm = () => {
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+    const [tag, setTag] = useState("News");
 
     return (
         <div className="p-8 border rounded-lg flex flex-col gap-4 w-full h-full">
             <h1 className="text-3xl font-bold">Create Post</h1>
-            <label className="text-2xl  font-semibold" htmlFor="title">Title</label>
+            <p>All fields marked with * are required</p>
+            <label className="text-2xl  font-semibold" htmlFor="title">Title*</label>
             <input
-                className="border-2 border-gray-300 bg-transparent rounded-md"
+                className="border-2 border-gray-600 bg-transparent rounded-md w-1/2 focus:outline-none focus:ring-0 focus:border-gray-200 focus:bg-black peer"
                 type="text"
                 placeholder=" Title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                required
                 disabled={isPosting}
             />
-            <label className="text-2xl font-semibold" htmlFor="content">Content</label>
+            <label className="text-2xl font-semibold" htmlFor="tag">Tag*</label>
+            <select 
+                className="block py-2.5 w-1/6 px-1 text-sm bg-transparent border-2 rounded-md border-gray-600 focus:outline-none focus:ring-0 focus:border-gray-200 focus:bg-black peer"
+                name="tag"
+                placeholder="tag" 
+                value={tag} 
+                required
+                onChange={(e) => setTag(e.target.value)} >
+                    <option value="News">News</option>
+                    <option value="Meme">Meme</option>
+                    <option value="Discussion">Discussion</option>
+                    <option value="Question">Question</option>
+                    <option value="Announcement">Announcement</option>
+            </select>
+            <label className="text-2xl font-semibold" htmlFor="content">Content*</label>
             <textarea
-                className="border-2  border-gray-300 bg-transparent rounded-md"
+                className="border-2 border-gray-600 bg-transparent rounded-md h-32 focus:outline-none focus:ring-0 focus:border-gray-200 focus:bg-black peer"
                 placeholder=" Content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
+                required
                 disabled={isPosting}
             />
-            <MyButton name="Post" onClick={() => mutate({ title: title, content: content })}></MyButton>
+            <MyButton name="Post" onClick={() => mutate({ title: title, content: content, tag: content })}></MyButton>
         </div>
     )
 };

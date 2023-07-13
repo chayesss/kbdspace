@@ -71,6 +71,7 @@ export const postsRouter = createTRPCRouter({
     z.object({
       title: z.string().min(1).max(255),
       content: z.string().min(1).max(2500),
+      tag: z.string().min(1).max(255),
   }))
   .mutation(async ({ ctx, input }) => {
     const authorId = ctx.userId;
@@ -89,6 +90,7 @@ export const postsRouter = createTRPCRouter({
         authorId,
         title: input.title,
         content: input.content,
+        tag: input.tag,
       },
     });
 
