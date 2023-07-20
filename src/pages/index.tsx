@@ -40,8 +40,8 @@ type PostWithUser = RouterOutputs["posts"]["getAll"][number];
 const PostView = (props: PostWithUser) => {
   const { post, author } = props;
   return (
-    <div key={post.id} className="p-8 border rounded-lg flex flex-row gap-4">
-      <div>
+    <div key={post.id} className="p-8 bg-neutral-950 shadow-inner shadow-neutral-800/80 rounded-lg flex flex-row gap-4">
+      <div className=" flex-shrink-0">
         <Image
           src={author.profileImageUrl}
           alt="pfp"
@@ -53,6 +53,9 @@ const PostView = (props: PostWithUser) => {
       <div>
         <div className="text-xl font-semibold">
           <span>{post.title}</span>
+        </div>
+        <div className="p-1">
+          <span>{post.content}</span>
         </div>
         <div className="flex flex-row gap-1">
           <span className="font-semibold">@{author.username} · </span>
@@ -106,7 +109,7 @@ export default function Home() {
 
 
       <main className="flex flex-col sm:flex-row justify-center h-full gap-4 m-2">
-        <div className="border h-screen rounded-lg sticky top-0">
+        <div className="bg-neutral-950 shadow-inner shadow-neutral-800/80 h-screen rounded-lg sticky top-0">
           <div className="flex flex-row  p-4">
             <div className="w-full flex self-center">
               <h1 className="text-2xl font-bold tracking-widest">kbdspace</h1>
