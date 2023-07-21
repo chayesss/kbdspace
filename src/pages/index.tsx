@@ -1,7 +1,6 @@
-import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import Head from "next/head";
 import { type RouterOutputs, api } from "~/utils/api";
-import { dark } from "@clerk/themes";
 import Image from "next/image";
 import Link from "next/link"
 
@@ -9,6 +8,7 @@ import { LoadingSpinner } from "~/components/loading";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import { MyButton } from "~/components/custombutton";
+import { SideBar } from "~/components/sidebar";
 dayjs.extend(relativeTime);
 
 
@@ -40,7 +40,7 @@ type PostWithUser = RouterOutputs["posts"]["getAll"][number];
 const PostView = (props: PostWithUser) => {
   const { post, author } = props;
   return (
-    <div key={post.id} className="p-8 bg-gradient-to-t from-gray-950 to-gray-900 border border-slate-800 rounded-lg flex flex-row gap-4">
+    <div key={post.id} className="p-8 bg-gradient-to-t from-gray-950 to-gray-900 border border-slate-800 shadow shadow-black rounded-lg flex flex-row gap-4">
       <div className=" flex-shrink-0">
         <Image
           src={author.profileImageUrl}
@@ -89,7 +89,7 @@ const FrontPage = () => {
 
 export default function Home() {
 
-  const { user, isLoaded: userLoaded, isSignedIn } = useUser();
+  const { isLoaded: userLoaded } = useUser();
 
   // start fetching posts
   api.posts.getAll.useQuery();
@@ -109,46 +109,14 @@ export default function Home() {
 
 
       <main className="flex flex-col sm:flex-row justify-center h-full gap-4 m-2">
-        <div className="p-2 bg-gradient-to-t from-gray-950 to-gray-900 h-screen w-1/4 border border-slate-800 rounded-lg sticky top-0">
-          <div className="flex flex-row  p-4">
-            <div className="w-full flex self-center">
-              <h1 className="text-2xl font-bold tracking-widest">kbdspace</h1>
-            </div>
-            <div className="flex w-full justify-end">
-              <div className="flex flex-row gap-3">
-                <div className="flex flex-col text-right">
-                  {!!isSignedIn && <span className="font-semibold">{user.fullName}</span>}
-                  {!!isSignedIn && <span className="font-light">@{user.username}</span>}
-                </div>
-                <div className="flex self-center">
-                  {!isSignedIn && <SignInButton />}
-                  {!!isSignedIn && <UserButton
-                    appearance={{
-                      baseTheme: dark,
-                      elements: {
-                        avatarBox:
-                          "w-12 h-12",
-                      }
-                    }}
-                    userProfileMode="navigation"
-                    userProfileUrl={
-                      typeof window !== "undefined"
-                        ? `${window.location.origin}/profile`
-                        : undefined
-                    }
-                  />}
-                </div>
-
-              </div>
-
-            </div>
-          </div>
+        <div className="flex-shrink-0 w-[22rem] mr-4 h-screen">
+          <SideBar />
         </div>
-        <div className="w-full md: max-w-5xl ">
-
+        <div className="w-full max-w-6xl ">
           <div className="flex flex-row p-4 justify-end">
             <PostsManager />
           </div>
+
           <div>
             <FrontPage />
           </div>
