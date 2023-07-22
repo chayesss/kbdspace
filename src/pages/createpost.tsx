@@ -1,7 +1,7 @@
-import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import Head from "next/head";
 import { api } from "~/utils/api";
-import { dark } from "@clerk/themes";
+import { SideBar } from "~/components/sidebar";
 
 import { LoadingSpinner } from "~/components/loading";
 import dayjs from "dayjs";
@@ -34,12 +34,12 @@ const CreatePostForm = () => {
     const [tag, setTag] = useState("News");
 
     return (
-        <div className="p-8 border rounded-lg flex flex-col gap-4 w-full h-full">
+        <div className="p-8 bg-gradient-to-t from-gray-950 to-gray-900 border border-slate-800 shadow shadow-black rounded-lg flex flex-col gap-4 w-full h-full">
             <h1 className="text-3xl font-bold">Create Post</h1>
             <p>All fields marked with * are required</p>
             <label className="text-2xl  font-semibold" htmlFor="title">Title*</label>
             <input
-                className="border-2 border-gray-600 bg-transparent rounded-md w-1/2 focus:outline-none focus:ring-0 focus:border-gray-200 focus:bg-black peer"
+                className="border-2 border-slate-800 bg-transparent rounded-md w-1/2 focus:outline-none focus:ring-0 focus:border-slate-400 focus:bg-gray-950 peer"
                 type="text"
                 placeholder=" Title"
                 value={title}
@@ -48,22 +48,22 @@ const CreatePostForm = () => {
                 disabled={isPosting}
             />
             <label className="text-2xl font-semibold" htmlFor="tag">Tag*</label>
-            <select 
-                className="block py-2.5 w-1/6 px-1 text-sm bg-transparent border-2 rounded-md border-gray-600 focus:outline-none focus:ring-0 focus:border-gray-200 focus:bg-black peer"
+            <select
+                className="block py-2.5 w-1/6 px-1 text-sm bg-transparent border-2 rounded-md border-slate-800 focus:outline-none focus:ring-0 focus:border-slate-400 focus:bg-gray-950 peer"
                 name="tag"
-                placeholder="tag" 
-                value={tag} 
+                placeholder="tag"
+                value={tag}
                 required
                 onChange={(e) => setTag(e.target.value)} >
-                    <option value="News">News</option>
-                    <option value="Meme">Meme</option>
-                    <option value="Discussion">Discussion</option>
-                    <option value="Question">Question</option>
-                    <option value="Announcement">Announcement</option>
+                <option value="News">News</option>
+                <option value="Meme">Meme</option>
+                <option value="Discussion">Discussion</option>
+                <option value="Question">Question</option>
+                <option value="Announcement">Announcement</option>
             </select>
             <label className="text-2xl font-semibold" htmlFor="content">Content*</label>
             <textarea
-                className="border-2 border-gray-600 bg-transparent rounded-md h-32 focus:outline-none focus:ring-0 focus:border-gray-200 focus:bg-black peer"
+                className="border-2 border-slate-800 bg-transparent rounded-md h-32 focus:outline-none focus:ring-0 focus:border-slate-400 focus:bg-gray-950 peer"
                 placeholder=" Content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
@@ -79,7 +79,7 @@ const CreatePostForm = () => {
 
 export default function Home() {
 
-    const { user, isLoaded: userLoaded, isSignedIn } = useUser();
+    const {isLoaded: userLoaded, } = useUser();
 
 
 
@@ -98,40 +98,8 @@ export default function Home() {
 
 
             <main className="flex flex-col sm:flex-row justify-center h-screen  gap-4 m-2">
-                <div className="border h-screen rounded-lg sticky top-0">
-                    <div className="flex flex-row  p-4">
-                        <div className="w-full flex self-center">
-                            <h1 className="text-2xl font-bold tracking-widest">kbdspace</h1>
-                        </div>
-                        <div className="flex w-full justify-end">
-                            <div className="flex flex-row gap-3">
-                                <div className="flex flex-col text-right">
-                                    {!!isSignedIn && <span className="font-semibold">{user.fullName}</span>}
-                                    {!!isSignedIn && <span className="font-light">@{user.username}</span>}
-                                </div>
-                                <div className="flex self-center">
-                                    {!isSignedIn && <SignInButton />}
-                                    {!!isSignedIn && <UserButton
-                                        appearance={{
-                                            baseTheme: dark,
-                                            elements: {
-                                                avatarBox:
-                                                    "w-12 h-12",
-                                            }
-                                        }}
-                                        userProfileMode="navigation"
-                                        userProfileUrl={
-                                            typeof window !== "undefined"
-                                                ? `${window.location.origin}/profile`
-                                                : undefined
-                                        }
-                                    />}
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
+                <div className="flex-shrink-0 w-[22rem] mr-4 h-screen">
+                    <SideBar />
                 </div>
                 <div className="w-full md: max-w-5xl ">
                     <div className="flex flex-row p-4">
