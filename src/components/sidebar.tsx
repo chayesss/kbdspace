@@ -9,7 +9,7 @@ export const SideBar = () => {
 
 
     return (
-        <div className="block fixed z-20 w-[22rem] top-6">
+        <div className="block fixed z-20 w-[22rem] overflow-y-auto top-6">
             <div className="p-2 flex justify-center">
                 <svg width="300" height="100" viewBox="0 0 903 121" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_2_2)">

@@ -9,6 +9,11 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import { MyButton } from "~/components/custombutton";
 import { SideBar } from "~/components/sidebar";
+import { MyLogo } from "~/components/logo";
+import { BiMenuAltLeft } from "react-icons/bi";
+import { BiFilterAlt } from "react-icons/bi";
+import { IoCreateOutline } from "react-icons/io5";
+import { MobileHeader } from "~/components/mobileheader";
 dayjs.extend(relativeTime);
 
 
@@ -20,9 +25,23 @@ const PostsManager = () => {
   // TODO: ADD SORT METHOD 
   if (!!user.isSignedIn) {
     return (
-      <Link href={`/createpost`}>
-        <MyButton name="Create Post"></MyButton>
-      </Link>
+      <div className="flex flex-col gap-6">
+        <div className="ml-2 mr-2 pb-4 flex flex-row">
+          <div className="flex items-center">
+            <button className="w-[8rem] flex flex-row items-center text-lg gap-2">
+              <BiFilterAlt size={24} />
+              <p>Filter</p>
+            </button>
+          </div>
+          <div className="flex-grow"></div>
+          <div className="flex pl-2 items-center">
+            <Link href={`/createpost`}>
+              <MyButton name="Create Post"></MyButton>
+            </Link>
+          </div>
+        </div>
+      </div>
+
     )
   } else if (!user.isSignedIn) {
     return (
@@ -54,7 +73,7 @@ const PostView = (props: PostWithUser) => {
         <div className="text-xl font-semibold">
           <span>{post.title}</span>
         </div>
-        <div className="p-1">
+        <div className="text-slate-300">
           <span>{post.content}</span>
         </div>
         <div className="flex flex-row gap-1">
@@ -74,6 +93,8 @@ const PostView = (props: PostWithUser) => {
 const FrontPage = () => {
 
   const { data } = api.posts.getAll.useQuery();
+
+  if (!data) return (<LoadingSpinner />);
 
 
   return (
@@ -108,17 +129,22 @@ export default function Home() {
       </Head>
 
 
-      <main className="flex flex-col sm:flex-row justify-center h-full gap-4 m-2">
-        <div className="flex-shrink-0 w-[22rem] mr-4 h-screen">
-          <SideBar />
+      <main>
+        {/* MOBILE HEADER */}
+        <div>
+          <MobileHeader />
         </div>
-        <div className="w-full max-w-6xl ">
-          <div className="flex flex-row p-4 justify-end">
-            <PostsManager />
+        <div className="flex flex-col sm:flex-row justify-center h-full gap-4 m-4">
+          <div className="hidden lg:block flex-shrink-0 w-[22rem] overflow-y-auto mr-4 h-screen">
+            <SideBar />
           </div>
-
-          <div>
-            <FrontPage />
+          <div className="w-full max-w-6xl ">
+            <div className="">
+              <PostsManager />
+            </div>
+            <div>
+              <FrontPage />
+            </div>
           </div>
         </div>
       </main>
