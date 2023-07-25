@@ -9,10 +9,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import { MyButton } from "~/components/custombutton";
 import { SideBar } from "~/components/sidebar";
-import { MyLogo } from "~/components/logo";
-import { BiMenuAltLeft } from "react-icons/bi";
 import { BiFilterAlt } from "react-icons/bi";
-import { IoCreateOutline } from "react-icons/io5";
 import { MobileHeader } from "~/components/mobileheader";
 dayjs.extend(relativeTime);
 
@@ -22,10 +19,8 @@ dayjs.extend(relativeTime);
 const PostsManager = () => {
   const user = useUser();
 
-  // TODO: ADD SORT METHOD 
-  if (!!user.isSignedIn) {
-    return (
-      <div className="flex flex-col gap-6">
+  return (
+    <div className="flex flex-col gap-6">
         <div className="ml-2 mr-2 pb-4 flex flex-row">
           <div className="flex items-center">
             <button className="w-[8rem] flex flex-row items-center text-lg gap-2">
@@ -41,13 +36,7 @@ const PostsManager = () => {
           </div>
         </div>
       </div>
-
-    )
-  } else if (!user.isSignedIn) {
-    return (
-      <span>You must be signed in to create a post!</span>
-    )
-  }
+  )
 
 };
 
@@ -134,8 +123,8 @@ export default function Home() {
         <div>
           <MobileHeader />
         </div>
-        <div className="flex flex-col sm:flex-row justify-center h-full gap-4 m-4">
-          <div className="hidden lg:block flex-shrink-0 w-[22rem] overflow-y-auto mr-4 h-screen">
+        <div className="flex flex-col sm:flex-row justify-center h-full gap-4 m-4 pt-16 lg:pt-0">
+          <div className="hidden lg:block flex-shrink-0 w-[22rem] mr-4 h-screen">
             <SideBar />
           </div>
           <div className="w-full max-w-6xl ">
