@@ -11,6 +11,7 @@ import { MyButton } from "~/components/custombutton";
 import { SideBar } from "~/components/sidebar";
 import { BiFilterAlt } from "react-icons/bi";
 import { MobileHeader } from "~/components/mobileheader";
+import { motion } from "framer-motion";
 dayjs.extend(relativeTime);
 
 
@@ -21,21 +22,21 @@ const PostsManager = () => {
 
   return (
     <div className="flex flex-col gap-6">
-        <div className="ml-2 mr-2 pb-4 flex flex-row">
-          <div className="flex items-center">
-            <button className="w-[8rem] flex flex-row items-center text-lg gap-2">
-              <BiFilterAlt size={24} />
-              <p>Filter</p>
-            </button>
-          </div>
-          <div className="flex-grow"></div>
-          <div className="flex pl-2 items-center">
-            <Link href={`/createpost`}>
-              <MyButton name="Create Post"></MyButton>
-            </Link>
-          </div>
+      <div className="ml-2 mr-2 pb-4 flex flex-row">
+        <div className="flex items-center">
+          <button className="w-[8rem] flex flex-row items-center text-lg gap-2">
+            <BiFilterAlt size={24} />
+            <p>Filter</p>
+          </button>
+        </div>
+        <div className="flex-grow"></div>
+        <div className="flex pl-2 items-center">
+          <Link href={`/createpost`}>
+            <MyButton name="Create Post"></MyButton>
+          </Link>
         </div>
       </div>
+    </div>
   )
 
 };
@@ -47,8 +48,15 @@ type PostWithUser = RouterOutputs["posts"]["getAll"][number];
 //creates individual post view
 const PostView = (props: PostWithUser) => {
   const { post, author } = props;
+
   return (
-    <div key={post.id} className="p-8 bg-gradient-to-t from-gray-950 to-gray-900 border border-slate-800 shadow shadow-black rounded-lg flex flex-row gap-4">
+    <motion.div key={post.id} className="p-8 bg-gradient-to-t from-gray-950 to-gray-900 border border-slate-800 shadow shadow-black rounded-lg flex flex-row gap-4"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: .5, ease: "easeInOut", staggerChildren: 0.5, delayChildren: 0.5 }}
+    >
+
       <div className=" flex-shrink-0">
         <Image
           src={author.profileImageUrl}
@@ -58,22 +66,34 @@ const PostView = (props: PostWithUser) => {
           height={48}
         />
       </div>
-      <div>
+      <div className="flex flex-col gap-1">
         <div className="text-xl font-semibold">
           <span>{post.title}</span>
         </div>
         <div className="text-slate-300">
           <span>{post.content}</span>
         </div>
-        <div className="flex flex-row gap-1">
-          <span className="font-semibold">@{author.username} · </span>
+        <div className="flex flex-row gap-2">
+          <span className="font-semibold">@{author.username}</span>
+          <span> · </span>
           <span className="font-thin">{`  ${dayjs(post.createdAt).fromNow()}`}</span>
+          <span> · </span>
+          <span className="font">
+            {post.tag == "News" && <div className="border p-0.5 rounded border-green-500 text-green-500"><p>News</p></div>}
+            {post.tag == "Meme" && <div className="border p-0.5 rounded border-pink-500 text-pink-500">Meme</div>}
+            {post.tag == "Discussion" && <div className="border p-0.5 rounded border-blue-500 text-blue-500">Discussion</div>}
+            {post.tag == "Question" && <div className="border p-0.5 rounded border-purple-600 text-purple-600">Question</div>}
+            {post.tag == "Announcement" && <div className="border p-0.5 rounded border-red-600 text-red-600">Announcement</div>}
+            {post.tag == "Feedback" && <div className="border p-0.5 rounded border-yellow-500 text-yellow-500">Feedback</div>}
+          </span>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 
 }
+
+
 
 
 
@@ -119,7 +139,6 @@ export default function Home() {
 
 
       <main>
-        {/* MOBILE HEADER */}
         <div>
           <MobileHeader />
         </div>

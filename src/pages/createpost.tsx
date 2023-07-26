@@ -70,7 +70,7 @@ const CreatePostForm = () => {
                 required
                 disabled={isPosting}
             />
-            <MyButton name="Post" onClick={() => mutate({ title: title, content: content, tag: content })}></MyButton>
+            <MyButton name="Post" onClick={() => mutate({ title: title, content: content, tag: tag })}></MyButton>
         </div>
     )
 };
