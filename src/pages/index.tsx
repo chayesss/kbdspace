@@ -1,3 +1,4 @@
+
 import { useUser } from "@clerk/nextjs";
 import Head from "next/head";
 import { type RouterOutputs, api } from "~/utils/api";
@@ -13,7 +14,12 @@ import { IoCloseOutline } from "react-icons/io5";
 import { MobileHeader } from "~/components/mobileheader";
 import { AnimatePresence, easeInOut, motion } from "framer-motion";
 import { useState } from "react";
+import dynamic from "next/dynamic";
+
+import 'react-quill/dist/quill.snow.css';
 dayjs.extend(relativeTime);
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 
 
@@ -27,8 +33,8 @@ const PostsManager = () => {
   const ctx = api.useContext();
 
   const variants = {
-    closed: { height: 0, paddingTop: 0 },
-    open: { height: 'auto', paddingTop: "1.5rem"},
+    closed: { height: 0, marginTop: 0 },
+    open: { height: 'auto', marginTop: "1.5rem"},
   };
 
 
@@ -122,13 +128,11 @@ const PostsManager = () => {
                 <option value="Announcement">Announcement</option>
               </select>
               <label className="text-2xl font-semibold" htmlFor="content">Content*</label>
-              <textarea
-                className="border-2 border-slate-800 bg-transparent rounded-md h-32 focus:outline-none focus:ring-0 focus:border-slate-400 focus:bg-gray-950 peer"
-                placeholder=" Content"
+              <ReactQuill 
+                id="content"
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
-                required
-                disabled={isPosting}
+                onChange={(e) => setContent(e)}
+                className="h-[12rem] pb-8"
               />
               <button className="bg-sky-400 hover:bg-sky-600 duration-150 text-white font-bold py-2 px-4 border border-sky-700 rounded mt-2 mb-2" onClick={() => mutate({ title: title, content: content, tag: tag })}>
                 Post

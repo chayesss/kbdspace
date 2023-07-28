@@ -22,3 +22,33 @@ body {
     }
   }
 }
+
+
+.ql-toolbar.ql-snow {
+  @apply !bg-gray-900 !border !border-gray-700 !rounded-t-md;
+}
+.ql-container {
+    @apply !border !border-gray-700 !border-t-0 !rounded-b-md ;
+}
+
+.ql-toolbar .ql-stroke {
+    @apply !stroke-white !fill-none ; 
+}
+
+.ql-toolbar .ql-fill {
+    @apply !fill-white !stroke-none;
+}
+
+.ql-toolbar .ql-picker {
+    @apply !text-white;
+}
+
+.ql-picker-options {
+    @apply !bg-gray-900 !border !border-gray-700 !rounded-md;
+}
+
+.ql-formats {
+    @apply !bg-gray-900 !border !border-gray-700 !rounded-md ;
+}
+
+

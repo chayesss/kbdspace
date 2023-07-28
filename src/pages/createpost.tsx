@@ -17,7 +17,6 @@ const CreatePostForm = () => {
 
     const ctx = api.useContext();
 
-    //TODO: REDIRECT TO HOME PAGE AFTER POSTING
     const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
         onSuccess: () => {
 
