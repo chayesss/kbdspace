@@ -7,6 +7,10 @@ import { BsGithub } from "react-icons/bs";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 
+
+
+
+
 const ProfileSection = () => {
 
   const { user, isSignedIn } = useUser();

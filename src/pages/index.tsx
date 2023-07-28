@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import { SideBar } from "~/components/sidebar";
 import { BiFilterAlt } from "react-icons/bi";
+import { IoCreateOutline } from "react-icons/io5";
 import { IoCloseOutline } from "react-icons/io5";
 import { MobileHeader } from "~/components/mobileheader";
 import { AnimatePresence, easeInOut, motion } from "framer-motion";
@@ -25,27 +26,32 @@ const PostsManager = () => {
 
   const ctx = api.useContext();
 
-    //TODO: REDIRECT TO HOME PAGE AFTER POSTING
-    const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
-        onSuccess: () => {
-
-            setTitle("");
-            setContent("");
-            setTag("");
-            setCreatingPost(false);
+  const variants = {
+    closed: { height: 0, paddingTop: 0 },
+    open: { height: 'auto', paddingTop: "1.5rem"},
+  };
 
 
-            void ctx.posts.getAll.invalidate();
+  const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
+    onSuccess: () => {
 
-        }
-    });
+      setTitle("");
+      setContent("");
+      setTag("");
+      setCreatingPost(false);
 
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
-    const [tag, setTag] = useState("News");
+
+      void ctx.posts.getAll.invalidate();
+
+    }
+  });
+
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [tag, setTag] = useState("News");
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col">
       <div className="ml-2 mr-2 flex flex-row">
         <div className="flex items-center">
           <button className="w-[8rem] flex flex-row items-center text-lg gap-2">
@@ -56,77 +62,81 @@ const PostsManager = () => {
         <div className="flex-grow"></div>
         <div className="flex pl-2 items-center">
           {!isSignedIn &&
-            <div className="flex flex-row items-center">
-              <p> You must be logged in to create a post! </p>
-              <button className="bg-sky-300 cursor-not-allowed duration-150 text-white font-bold py-2 px-4 border border-sky-700 rounded  ml-4 mt-2 mb-2" disabled>
-                Create Post
+            <div className="flex flex-row items-center justify-end">
+              <button className="w-[9rem] flex flex-row justify-end items-center text-slate-400 cursor-not-allowed text-lg gap-2" disabled onClick={() => { setCreatingPost(true) }}>
+              <p>Login to post</p> <IoCreateOutline size={24}/>
               </button>
             </div>
           }
           {!!isSignedIn &&
-            <button className="bg-sky-400 hover:bg-sky-600 duration-150 text-white font-bold py-2 px-4 border border-sky-700 rounded  ml-4 mt-2  " onClick={() => {setCreatingPost(true)}}>
-              Create Post
+            <button className="w-[8rem] flex flex-row items-center text-lg gap-2" onClick={() => { setCreatingPost(true) }}>
+              <p>Create Post</p><IoCreateOutline size={24}/>
             </button>}
         </div>
       </div>
       <AnimatePresence>
+        {!!creatingPost &&
+          <motion.div className="overflow-hidden"
+            key="createPost"
+            initial="closed"
+            animate="open"
+            variants={variants}
+            exit="closed"
+            layout
+            transition={{ duration: .75, ease: easeInOut }}>
 
-      
-      {!!creatingPost &&
-        <motion.div className="p-8 bg-gradient-to-t from-gray-950 to-gray-900 border border-slate-800 shadow shadow-black rounded-lg flex flex-col gap-4 w-full h-full"
-        key="createPost"
-        initial={{height: 0}}
-        animate={{height: 600}}
-        exit={{height: 0}}
-        transition={{duration: .3, ease: easeInOut}}>
+            <div className="flex flex-row">
 
-          <div className="flex flex-row items-center">
-            <h1 className="text-3xl font-bold">Create Post</h1>
-            <div className="flex-grow"></div>
-            <button>
-              <IoCloseOutline size={42} onClick={() => {setCreatingPost(false)}}/>
-            </button>
-          </div>
-          <hr className=" border-slate-600 " />
-          <p>All fields marked with * are required</p>
-          <label className="text-2xl  font-semibold" htmlFor="title">Title*</label>
-          <input
-            className="border-2 border-slate-800 bg-transparent rounded-md w-1/2 focus:outline-none focus:ring-0 focus:border-slate-400 focus:bg-gray-950 peer"
-            type="text"
-            placeholder=" Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-            disabled={isPosting}
-          />
-          <label className="text-2xl font-semibold" htmlFor="tag">Tag*</label>
-          <select
-            className="block py-2.5 w-1/6 px-1 text-sm bg-transparent border-2 rounded-md border-slate-800 focus:outline-none focus:ring-0 focus:border-slate-400 focus:bg-gray-950 peer"
-            name="tag"
-            placeholder="tag"
-            value={tag}
-            required
-            onChange={(e) => setTag(e.target.value)} >
-            <option value="News">News</option>
-            <option value="Meme">Meme</option>
-            <option value="Discussion">Discussion</option>
-            <option value="Question">Question</option>
-            <option value="Announcement">Announcement</option>
-          </select>
-          <label className="text-2xl font-semibold" htmlFor="content">Content*</label>
-          <textarea
-            className="border-2 border-slate-800 bg-transparent rounded-md h-32 focus:outline-none focus:ring-0 focus:border-slate-400 focus:bg-gray-950 peer"
-            placeholder=" Content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            required
-            disabled={isPosting}
-          />
-          <button className="bg-sky-400 hover:bg-sky-600 duration-150 text-white font-bold py-2 px-4 border border-sky-700 rounded mt-2 mb-2" onClick={() => mutate({ title: title, content: content, tag: tag })}>
-            Post
-          </button>
-        </motion.div>}
-        </AnimatePresence>
+              <h1 className="text-3xl font-bold">Create Post</h1>
+              <div className="flex-grow"></div>
+              <button>
+                <IoCloseOutline size={42} onClick={() => { setCreatingPost(false) }} />
+              </button>
+              
+            </div>
+            <div className=" flex flex-col gap-4 w-full">
+              <hr className=" border-slate-600 mt-2" />
+              <p>All fields marked with * are required</p>
+              <label className="text-2xl  font-semibold" htmlFor="title">Title*</label>
+              <input
+                className="border-2 border-slate-800 bg-transparent rounded-md w-1/2 focus:outline-none focus:ring-0 focus:border-slate-400 focus:bg-gray-950 peer"
+                type="text"
+                placeholder=" Title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+                disabled={isPosting}
+              />
+              <label className="text-2xl font-semibold" htmlFor="tag">Tag*</label>
+              <select
+                className="block py-2.5 w-1/6 px-1 text-sm bg-transparent border-2 rounded-md border-slate-800 focus:outline-none focus:ring-0 focus:border-slate-400 focus:bg-gray-950 peer"
+                name="tag"
+                placeholder="tag"
+                value={tag}
+                required
+                onChange={(e) => setTag(e.target.value)} >
+                <option value="News">News</option>
+                <option value="Meme">Meme</option>
+                <option value="Discussion">Discussion</option>
+                <option value="Question">Question</option>
+                <option value="Announcement">Announcement</option>
+              </select>
+              <label className="text-2xl font-semibold" htmlFor="content">Content*</label>
+              <textarea
+                className="border-2 border-slate-800 bg-transparent rounded-md h-32 focus:outline-none focus:ring-0 focus:border-slate-400 focus:bg-gray-950 peer"
+                placeholder=" Content"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                required
+                disabled={isPosting}
+              />
+              <button className="bg-sky-400 hover:bg-sky-600 duration-150 text-white font-bold py-2 px-4 border border-sky-700 rounded mt-2 mb-2" onClick={() => mutate({ title: title, content: content, tag: tag })}>
+                Post
+              </button>
+            </div>
+
+          </motion.div>}
+      </AnimatePresence>
     </div>
   )
 
@@ -198,7 +208,7 @@ const FrontPage = () => {
 
 
   return (
-    <div className="flex flex-col mt-4 gap-4">
+    <div className="flex flex-col gap-4 mt-6">
       {data?.map((fullPost) => (
         <PostView {...fullPost} key={fullPost.post.id} />))}
     </div>
@@ -234,7 +244,7 @@ export default function Home() {
           <MobileHeader />
         </div>
         <div className="flex flex-col sm:flex-row justify-center h-full gap-4 m-4 pt-16 lg:pt-0">
-          <div className="hidden lg:block flex-shrink-0 w-[22rem] mr-4 h-screen">
+          <div className="hidden lg:block flex-shrink-0 w-[22rem] mr-4 h-screen overflow-y-auto">
             <SideBar />
           </div>
           <div className="w-full max-w-6xl ">
