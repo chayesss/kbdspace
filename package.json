@@ -24,6 +24,7 @@
     "@vercel/analytics": "^1.0.1",
     "dayjs": "^1.11.8",
     "framer-motion": "^10.13.1",
+    "isomorphic-dompurify": "^1.8.0",
     "next": "^13.4.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",

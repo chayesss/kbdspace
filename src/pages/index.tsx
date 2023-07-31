@@ -14,6 +14,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import { MobileHeader } from "~/components/mobileheader";
 import { AnimatePresence, easeInOut, motion } from "framer-motion";
 import { useState } from "react";
+import DOMPurify from "isomorphic-dompurify";
 import dynamic from "next/dynamic";
 
 import 'react-quill/dist/quill.snow.css';
@@ -34,7 +35,7 @@ const PostsManager = () => {
 
   const variants = {
     closed: { height: 0, marginTop: 0 },
-    open: { height: 'auto', marginTop: "1.5rem"},
+    open: { height: 'auto', marginTop: "1.5rem" },
   };
 
 
@@ -70,13 +71,13 @@ const PostsManager = () => {
           {!isSignedIn &&
             <div className="flex flex-row items-center justify-end">
               <button className="w-[9rem] flex flex-row justify-end items-center text-slate-400 cursor-not-allowed text-lg gap-2" disabled onClick={() => { setCreatingPost(true) }}>
-              <p>Login to post</p> <IoCreateOutline size={24}/>
+                <p>Login to post</p> <IoCreateOutline size={24} />
               </button>
             </div>
           }
           {!!isSignedIn &&
             <button className="w-[8rem] flex flex-row items-center text-lg gap-2" onClick={() => { setCreatingPost(true) }}>
-              <p>Create Post</p><IoCreateOutline size={24}/>
+              <p>Create Post</p><IoCreateOutline size={24} />
             </button>}
         </div>
       </div>
@@ -98,7 +99,7 @@ const PostsManager = () => {
               <button>
                 <IoCloseOutline size={42} onClick={() => { setCreatingPost(false) }} />
               </button>
-              
+
             </div>
             <div className=" flex flex-col gap-4 w-full">
               <hr className=" border-slate-600 mt-2" />
@@ -128,7 +129,7 @@ const PostsManager = () => {
                 <option value="Announcement">Announcement</option>
               </select>
               <label className="text-2xl font-semibold" htmlFor="content">Content*</label>
-              <ReactQuill 
+              <ReactQuill
                 id="content"
                 value={content}
                 onChange={(e) => setContent(e)}
@@ -153,16 +154,21 @@ type PostWithUser = RouterOutputs["posts"]["getAll"][number];
 //creates individual post view
 const PostView = (props: PostWithUser) => {
   const { post, author } = props;
+  const { user } = useUser();
+
+
+
+
 
   return (
-    <motion.div key={post.id} className="p-8 bg-gradient-to-t from-gray-950 to-gray-900 border border-slate-800 shadow shadow-black rounded-lg flex flex-row gap-4"
+    <motion.div key={post.id} className="p-8 bg-gradient-to-t from-gray-950 to-gray-900 border border-slate-800 shadow shadow-black rounded-lg flex flex-col gap-2"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: .5, ease: "easeInOut", staggerChildren: 0.5, delayChildren: 0.5 }}
     >
 
-      <div className=" flex-shrink-0">
+      <div className="flex flex-row gap-2 items-start sm:items-center  flex-shrink-0">
         <Image
           src={author.profileImageUrl}
           alt="pfp"
@@ -170,28 +176,63 @@ const PostView = (props: PostWithUser) => {
           width={48}
           height={48}
         />
+        <div className="flex flex-col gap-1">
+          <div className="flex flex-row gap-2">
+            <div className="flex flex-row gap-2">
+              <span className="font-semibold">@{author.username}</span>
+              <span> · </span>
+            </div>
+            <div className="flex flex-row gap-2">
+              <span className="font-thin">{`  ${dayjs(post.createdAt).fromNow()}`}</span>
+              <span className="hidden sm:flex"> · </span>
+            </div>
+            <span className="hidden items-center sm:flex">
+              {post.tag == "News" && <div className="border p-1 pt-0 pb-0 mt-0 mb-0 rounded border-green-500 text-green-500"><p>News</p></div>}
+              {post.tag == "Meme" && <div className="border p-0.5 pt-0 pb-0 rounded border-pink-500 text-pink-500">Meme</div>}
+              {post.tag == "Discussion" && <div className="border p-0.5 pt-0 pb-0 rounded border-blue-500 text-blue-500">Discussion</div>}
+              {post.tag == "Question" && <div className="border p-0.5 pt-0 pb-0 rounded border-purple-600 text-purple-600">Question</div>}
+              {post.tag == "Announcement" && <div className="border p-0.5 pt-0 pb-0 rounded border-red-600 text-red-600">Announcement</div>}
+              {post.tag == "Feedback" && <div className="border p-0.5 pt-0 pb-0 rounded border-yellow-500 text-yellow-500">Feedback</div>}
+            </span>
+          </div>
+          <div className="flex flex-row gap-2">
+            <span className="flex sm:hidden">
+              {post.tag == "News" && <div className="border p-0.5 rounded border-green-500 text-green-500"><p>News</p></div>}
+              {post.tag == "Meme" && <div className="border p-0.5 rounded border-pink-500 text-pink-500">Meme</div>}
+              {post.tag == "Discussion" && <div className="border p-0.5 rounded border-blue-500 text-blue-500">Discussion</div>}
+              {post.tag == "Question" && <div className="border p-0.5 rounded border-purple-600 text-purple-600">Question</div>}
+              {post.tag == "Announcement" && <div className="border p-0.5 rounded border-red-600 text-red-600">Announcement</div>}
+              {post.tag == "Feedback" && <div className="border p-0.5 rounded border-yellow-500 text-yellow-500">Feedback</div>}
+            </span>
+          </div>
+        </div> 
       </div>
       <div className="flex flex-col gap-1">
         <div className="text-xl font-semibold">
           <span>{post.title}</span>
-        </div>
+        </div>     
         <div className="text-slate-300">
-          <span>{post.content}</span>
+          <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}></span>
         </div>
-        <div className="flex flex-row gap-2">
-          <span className="font-semibold">@{author.username}</span>
-          <span> · </span>
-          <span className="font-thin">{`  ${dayjs(post.createdAt).fromNow()}`}</span>
-          <span> · </span>
-          <span className="font">
-            {post.tag == "News" && <div className="border p-0.5 rounded border-green-500 text-green-500"><p>News</p></div>}
-            {post.tag == "Meme" && <div className="border p-0.5 rounded border-pink-500 text-pink-500">Meme</div>}
-            {post.tag == "Discussion" && <div className="border p-0.5 rounded border-blue-500 text-blue-500">Discussion</div>}
-            {post.tag == "Question" && <div className="border p-0.5 rounded border-purple-600 text-purple-600">Question</div>}
-            {post.tag == "Announcement" && <div className="border p-0.5 rounded border-red-600 text-red-600">Announcement</div>}
-            {post.tag == "Feedback" && <div className="border p-0.5 rounded border-yellow-500 text-yellow-500">Feedback</div>}
-          </span>
-        </div>
+      </div>
+      <hr className=" border-slate-600 " />
+      <div className="flex flex-row gap-2 items-center">
+        <span>view</span>
+        <span> · </span>
+        <span>share</span>
+
+        {!!user && user.id == author.id &&
+          <div>
+            <span> · </span>
+            <span>edit</span>
+          </div>}
+        {!!user && user.id == author.id &&
+          <div>
+            <span> · </span>
+            <button>
+              <p className="">delete</p>
+            </button>
+          </div>}
       </div>
     </motion.div>
   )
