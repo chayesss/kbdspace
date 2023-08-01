@@ -8,7 +8,6 @@ import { LoadingSpinner } from "~/components/loading";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import { SideBar } from "~/components/sidebar";
-import { Modal } from "~/components/modal";
 import { BiFilterAlt } from "react-icons/bi";
 import { IoCreateOutline } from "react-icons/io5";
 import { IoCloseOutline } from "react-icons/io5";
@@ -19,7 +18,6 @@ import DOMPurify from "isomorphic-dompurify";
 import dynamic from "next/dynamic";
 
 import 'react-quill/dist/quill.snow.css';
-import { useRouter } from "next/router";
 dayjs.extend(relativeTime);
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
