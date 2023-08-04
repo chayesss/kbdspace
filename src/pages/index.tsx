@@ -1,9 +1,7 @@
-
 import { useUser } from "@clerk/nextjs";
 import Head from "next/head";
 import { type RouterOutputs, api } from "~/utils/api";
 import Image from "next/image";
-
 import { LoadingSpinner } from "~/components/loading";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
@@ -22,7 +20,7 @@ dayjs.extend(relativeTime);
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
-
+let sortState = "getAllAsc";
 
 // section with sort by, filter, and create post button
 const PostsManager = () => {
@@ -30,6 +28,7 @@ const PostsManager = () => {
   const { isSignedIn } = useUser();
 
   const [creatingPost, setCreatingPost] = useState(false);
+  const [filtering, setFiltering] = useState(false);
 
   const ctx = api.useContext();
 
@@ -57,11 +56,26 @@ const PostsManager = () => {
   const [content, setContent] = useState("");
   const [tag, setTag] = useState("News");
 
+  const [filterBy, setFilterBy] = useState("*");
+
+  const handleSortChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+    if (e.target.value === "newest") {
+      sortState = "getAll";
+    } else {
+      sortState = "getAllAsc";
+    }
+  };
+
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterBy(e.target.value);
+  };
+
   return (
     <div className="flex flex-col">
       <div className="ml-2 mr-2 flex flex-row">
         <div className="flex items-center">
-          <button className="w-[8rem] flex flex-row items-center text-lg gap-2">
+          <button className="w-[8rem] flex flex-row items-center text-lg gap-2" onClick={() => { setFiltering(true) }}>
             <BiFilterAlt size={24} />
             <p>Filter</p>
           </button>
@@ -81,6 +95,65 @@ const PostsManager = () => {
             </button>}
         </div>
       </div>
+      <AnimatePresence>
+        {!!filtering &&
+          <motion.div className="p-4 overflow-hidden"
+            key="createPost"
+            initial="closed"
+            animate="open"
+            variants={variants}
+            exit="closed"
+            layout
+            transition={{ duration: .75, ease: easeInOut }}>
+
+            <table className="flex flex-col gap-1">
+              <thead>
+                <tr className="flex flex-row gap-[4rem]">
+                  <th className="border-b w-[6rem] pb-1 flex justfiy-start border-gray-600">Sort By</th>
+                  <th className="border-b w-[6rem] flex justfiy-start border-gray-600">Tag</th>
+                </tr>
+              </thead>
+              <tbody className="flex text-slate-400 flex-row gap-[6.5rem]">
+                <tr className="flex flex-col">
+                  <td className="">
+                    <input type="radio" name="sort" id="newest" className="hidden peer" value="newest" onChange={handleSortChange}/>
+                    <label htmlFor="newest" className="radio-label cursor-pointer peer-checked:text-white">Newest</label>
+                  </td>
+                  <td>
+                    <input type="radio" name="sort" id="oldest" className="hidden peer" value="oldest" onChange={handleSortChange}/>
+                    <label htmlFor="oldest" className="radio-label cursor-pointer peer-checked:text-white">Oldest</label>
+                  </td>
+                </tr>
+                <tr className="flex flex-col">
+                  <td>
+                    <input type="radio" name="tag" id="news" className="hidden peer" value="News" onChange={handleFilterChange}/>
+                    <label htmlFor="news" className="radio-label cursor-pointer peer-checked:text-white">News</label>
+                  </td>
+                  <td>
+                    <input type="radio" name="tag" id="Discussion" className="hidden peer" value="Discussion" onChange={handleFilterChange}/>
+                    <label htmlFor="Discussion" className="radio-label cursor-pointer peer-checked:text-white">Discussion</label>
+                  </td>
+                  <td>
+                    <input type="radio" name="tag" id="question" className="hidden peer" value="Question" onChange={handleFilterChange}/>
+                    <label htmlFor="question" className="radio-label cursor-pointer peer-checked:text-white">Question</label>
+                  </td>
+                  <td>
+                    <input type="radio" name="tag" id="miscellaneous" className="hidden peer" value="Miscellaneous" onChange={handleFilterChange}/>
+                    <label htmlFor="miscellaneous" className="radio-label cursor-pointer peer-checked:text-white">Miscellaneous</label>
+                  </td>
+                  <td>
+                    <input type="radio" name="tag" id="feedback" className="hidden peer" value="Feedback" onChange={handleFilterChange}/>
+                    <label htmlFor="feedback" className="radio-label cursor-pointer peer-checked:text-white">Feedback</label>
+                  </td>
+                  <td>
+                    <input type="radio" name="tag" id="announcement" className="hidden peer" value="Announcement" onChange={handleFilterChange}/>
+                    <label htmlFor="announcement" className="radio-label cursor-pointer peer-checked:text-white">Announcement</label>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </motion.div>}
+      </AnimatePresence>
       <AnimatePresence>
         {!!creatingPost &&
           <motion.div className="overflow-hidden"
@@ -147,6 +220,35 @@ const PostsManager = () => {
 
 };
 
+const getPostsQuery = (sortState: string) => {
+  const {data} = sortState === "getAll" ? api.posts.getAll.useQuery() : api.posts.getAllAsc.useQuery();
+
+  return data;
+}
+
+
+// section with all posts
+const FrontPage = () => {
+
+  const data = getPostsQuery(sortState);
+
+
+
+  
+
+  if (!data) return (<LoadingSpinner />);
+
+  
+
+
+  return (
+    <div className="flex flex-col gap-4 mt-6">
+      {data?.map((fullPost) => (
+        <PostView {...fullPost} key={fullPost.post.id} />))}
+    </div>
+  )
+};
+
 
 
 
@@ -158,7 +260,13 @@ const PostView = (props: PostWithUser) => {
 
   const [toggleDelete, setToggleDelete] = useState(false);
 
-  const { mutate } = api.posts.delete.useMutation();
+  const ctx = api.useContext();
+
+  const { mutate } = api.posts.delete.useMutation({
+    onSuccess: () => {
+      void ctx.posts.getAll.invalidate();
+    }
+  });
 
 
 
@@ -280,24 +388,6 @@ const PostView = (props: PostWithUser) => {
 
 
 
-
-
-
-// section with all posts
-const FrontPage = () => {
-
-  const { data } = api.posts.getAll.useQuery();
-
-  if (!data) return (<LoadingSpinner />);
-
-
-  return (
-    <div className="flex flex-col gap-4 mt-6">
-      {data?.map((fullPost) => (
-        <PostView {...fullPost} key={fullPost.post.id} />))}
-    </div>
-  )
-};
 
 
 
