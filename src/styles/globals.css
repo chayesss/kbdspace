@@ -51,4 +51,57 @@ body {
     @apply !bg-gray-900 !border !border-gray-700 !rounded-md ;
 }
 
+.ql-editor p {
+    @apply !text-base !text-slate-200
+}
+
+.ql-editor h1 {
+    @apply !text-2xl !text-slate-100 !font-bold;
+}
+
+.ql-editor h2 {
+    @apply !text-xl !text-slate-100 !font-bold;
+}
+
+.ql-editor h3 {
+    @apply !text-lg !text-slate-100 !font-bold;
+}
+
+.ql-editor li {
+    @apply !text-base !text-slate-200;
+}
+
+.ql-indent-1 {
+    @apply !ml-4;
+}
+
+.post {
+    @apply !text-gray-300;
+}
+
+.post h1 {
+    @apply !text-2xl !text-slate-300 !font-bold;
+}
+
+.post h2 {
+    @apply !text-xl !text-slate-300 !font-bold;
+}
+
+.post h3 {
+    @apply !text-lg !text-slate-300 !font-bold;
+}
+
+.post ul {
+    @apply !text-base !text-slate-300 list-disc ml-8;
+}
+
+.post ol {
+    @apply !text-base !text-slate-300 list-decimal ml-8;
+}
+
+.post a {
+    @apply !text-blue-400;
+}
+
+
 

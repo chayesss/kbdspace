@@ -6,7 +6,6 @@ import { LoadingSpinner } from "~/components/loading";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import { SideBar } from "~/components/sidebar";
-import { BiFilterAlt } from "react-icons/bi";
 import { IoCreateOutline } from "react-icons/io5";
 import { IoCloseOutline } from "react-icons/io5";
 import { MobileHeader } from "~/components/mobileheader";
@@ -14,13 +13,12 @@ import { AnimatePresence, easeInOut, motion } from "framer-motion";
 import { useState } from "react";
 import DOMPurify from "isomorphic-dompurify";
 import dynamic from "next/dynamic";
-
 import 'react-quill/dist/quill.snow.css';
 dayjs.extend(relativeTime);
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
-let sortState = "getAllAsc";
+
 
 // section with sort by, filter, and create post button
 const PostsManager = () => {
@@ -28,7 +26,6 @@ const PostsManager = () => {
   const { isSignedIn } = useUser();
 
   const [creatingPost, setCreatingPost] = useState(false);
-  const [filtering, setFiltering] = useState(false);
 
   const ctx = api.useContext();
 
@@ -36,6 +33,10 @@ const PostsManager = () => {
     closed: { height: 0, marginTop: 0 },
     open: { height: 'auto', marginTop: "1.5rem" },
   };
+
+
+  const [count, setCount] = useState(0);
+  const [titleCount, setTitleCount] = useState(0);
 
 
   const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
@@ -54,106 +55,28 @@ const PostsManager = () => {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [tag, setTag] = useState("News");
+  const [tag, setTag] = useState("");
 
-  const [filterBy, setFilterBy] = useState("*");
 
-  const handleSortChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-
-    if (e.target.value === "newest") {
-      sortState = "getAll";
-    } else {
-      sortState = "getAllAsc";
-    }
-  };
-
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilterBy(e.target.value);
-  };
 
   return (
     <div className="flex flex-col">
       <div className="ml-2 mr-2 flex flex-row">
-        <div className="flex items-center">
-          <button className="w-[8rem] flex flex-row items-center text-lg gap-2" onClick={() => { setFiltering(true) }}>
-            <BiFilterAlt size={24} />
-            <p>Filter</p>
-          </button>
-        </div>
         <div className="flex-grow"></div>
         <div className="flex pl-2 items-center">
           {!isSignedIn &&
             <div className="flex flex-row items-center justify-end">
-              <button className="w-[9rem] flex flex-row justify-end items-center text-slate-400 cursor-not-allowed text-lg gap-2" disabled onClick={() => { setCreatingPost(true) }}>
+              <button className="w-[9rem] flex flex-row justify-end items-center text-slate-400 cursor-not-allowed text-lg gap-2" disabled >
                 <p>Login to post</p> <IoCreateOutline size={24} />
               </button>
             </div>
           }
           {!!isSignedIn &&
-            <button className="w-[8rem] flex flex-row items-center text-lg gap-2" onClick={() => { setCreatingPost(true) }}>
+            <button className="w-[8rem] flex flex-row items-center text-lg gap-2" onClick={() => { setCreatingPost(true); setCount(0); setTitleCount(0); setTag(""); setContent(""); setTitle("")}}>
               <p>Create Post</p><IoCreateOutline size={24} />
             </button>}
         </div>
       </div>
-      <AnimatePresence>
-        {!!filtering &&
-          <motion.div className="p-4 overflow-hidden"
-            key="createPost"
-            initial="closed"
-            animate="open"
-            variants={variants}
-            exit="closed"
-            layout
-            transition={{ duration: .75, ease: easeInOut }}>
-
-            <table className="flex flex-col gap-1">
-              <thead>
-                <tr className="flex flex-row gap-[4rem]">
-                  <th className="border-b w-[6rem] pb-1 flex justfiy-start border-gray-600">Sort By</th>
-                  <th className="border-b w-[6rem] flex justfiy-start border-gray-600">Tag</th>
-                </tr>
-              </thead>
-              <tbody className="flex text-slate-400 flex-row gap-[6.5rem]">
-                <tr className="flex flex-col">
-                  <td className="">
-                    <input type="radio" name="sort" id="newest" className="hidden peer" value="newest" onChange={handleSortChange}/>
-                    <label htmlFor="newest" className="radio-label cursor-pointer peer-checked:text-white">Newest</label>
-                  </td>
-                  <td>
-                    <input type="radio" name="sort" id="oldest" className="hidden peer" value="oldest" onChange={handleSortChange}/>
-                    <label htmlFor="oldest" className="radio-label cursor-pointer peer-checked:text-white">Oldest</label>
-                  </td>
-                </tr>
-                <tr className="flex flex-col">
-                  <td>
-                    <input type="radio" name="tag" id="news" className="hidden peer" value="News" onChange={handleFilterChange}/>
-                    <label htmlFor="news" className="radio-label cursor-pointer peer-checked:text-white">News</label>
-                  </td>
-                  <td>
-                    <input type="radio" name="tag" id="Discussion" className="hidden peer" value="Discussion" onChange={handleFilterChange}/>
-                    <label htmlFor="Discussion" className="radio-label cursor-pointer peer-checked:text-white">Discussion</label>
-                  </td>
-                  <td>
-                    <input type="radio" name="tag" id="question" className="hidden peer" value="Question" onChange={handleFilterChange}/>
-                    <label htmlFor="question" className="radio-label cursor-pointer peer-checked:text-white">Question</label>
-                  </td>
-                  <td>
-                    <input type="radio" name="tag" id="miscellaneous" className="hidden peer" value="Miscellaneous" onChange={handleFilterChange}/>
-                    <label htmlFor="miscellaneous" className="radio-label cursor-pointer peer-checked:text-white">Miscellaneous</label>
-                  </td>
-                  <td>
-                    <input type="radio" name="tag" id="feedback" className="hidden peer" value="Feedback" onChange={handleFilterChange}/>
-                    <label htmlFor="feedback" className="radio-label cursor-pointer peer-checked:text-white">Feedback</label>
-                  </td>
-                  <td>
-                    <input type="radio" name="tag" id="announcement" className="hidden peer" value="Announcement" onChange={handleFilterChange}/>
-                    <label htmlFor="announcement" className="radio-label cursor-pointer peer-checked:text-white">Announcement</label>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </motion.div>}
-      </AnimatePresence>
       <AnimatePresence>
         {!!creatingPost &&
           <motion.div className="overflow-hidden"
@@ -177,16 +100,30 @@ const PostsManager = () => {
             <div className=" flex flex-col gap-4 w-full">
               <hr className=" border-slate-600 mt-2" />
               <p>All fields marked with * are required</p>
-              <label className="text-2xl  font-semibold" htmlFor="title">Title*</label>
-              <input
-                className="border-2 border-slate-800 bg-transparent rounded-md w-1/2 focus:outline-none focus:ring-0 focus:border-slate-400 focus:bg-gray-950 peer"
-                type="text"
-                placeholder=" Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-                disabled={isPosting}
-              />
+              <div className="w-1/2 flex flex-col">
+                <label className="text-2xl pb-4 font-semibold" htmlFor="title">Title*</label>
+                <input
+                  className="border-2 border-slate-800 bg-transparent rounded-md pb-1 focus:outline-none focus:ring-0 focus:border-slate-400 focus:bg-gray-950 peer"
+                  type="text"
+                  placeholder=" Title"
+                  value={title}
+                  onChange={(e) => { setTitle(e.target.value); setTitleCount(e.target.value.length) }}
+                  required
+                  disabled={isPosting}
+                />
+                <div className="flex justify-end">
+                  {titleCount > 250 &&
+                    <p className="text-red-500">
+                      {titleCount}/250
+                    </p>}
+                  {titleCount <= 250 &&
+                    <p className="text-slate-300">
+                      {titleCount}/250
+                    </p>
+                  }
+                </div>
+              </div>
+              
               <label className="text-2xl font-semibold" htmlFor="tag">Tag*</label>
               <select
                 className="block py-2.5 w-1/6 px-1 text-sm bg-transparent border-2 rounded-md border-slate-800 focus:outline-none focus:ring-0 focus:border-slate-400 focus:bg-gray-950 peer"
@@ -195,8 +132,10 @@ const PostsManager = () => {
                 value={tag}
                 required
                 onChange={(e) => setTag(e.target.value)} >
+                <option disabled value="">Choose Tag</option>
+                <option value="Feedback">Feedback</option>
                 <option value="News">News</option>
-                <option value="Meme">Meme</option>
+                <option value="Miscellaneous">Miscellaneous</option>
                 <option value="Discussion">Discussion</option>
                 <option value="Question">Question</option>
                 <option value="Announcement">Announcement</option>
@@ -205,12 +144,30 @@ const PostsManager = () => {
               <ReactQuill
                 id="content"
                 value={content}
-                onChange={(e) => setContent(e)}
+                onChange={(e) => {setContent(e); setCount(e.replace(/(<([^>]+)>)/gi, "").length)}}
                 className="h-[12rem] pb-8"
               />
+              <div className="flex justify-end">
+                {count > 2000 &&
+                  <p className="text-red-500">
+                    {count}/2000
+                  </p>}
+                {count <= 2000 &&
+                  <p className="text-slate-300">
+                    {count}/2000
+                  </p>
+                }
+                
+              </div>
+              {(count > 0 && count < 2000) && (titleCount > 0 && titleCount < 250) && (tag !== "") ?
               <button className="bg-sky-400 hover:bg-sky-600 duration-150 text-white font-bold py-2 px-4 border border-sky-700 rounded mt-2 mb-2" onClick={() => mutate({ title: title, content: content, tag: tag })}>
                 Post
-              </button>
+              </button> : 
+              <button className="bg-sky-800 duration-150 text-slate-400 cursor-not-allowed font-bold py-2 px-4 border border-sky-700 rounded mt-2 mb-2" disabled >
+              Post
+            </button>
+            }
+              
             </div>
 
           </motion.div>}
@@ -220,26 +177,19 @@ const PostsManager = () => {
 
 };
 
-const getPostsQuery = (sortState: string) => {
-  const {data} = sortState === "getAll" ? api.posts.getAll.useQuery() : api.posts.getAllAsc.useQuery();
 
-  return data;
-}
 
 
 // section with all posts
 const FrontPage = () => {
 
-  const data = getPostsQuery(sortState);
+  const { data }= api.posts.getAll.useQuery();
 
 
-
-  
 
   if (!data) return (<LoadingSpinner />);
 
   
-
 
   return (
     <div className="flex flex-col gap-4 mt-6">
@@ -298,7 +248,7 @@ const PostView = (props: PostWithUser) => {
             </div>
             <span className="hidden items-center sm:flex">
               {post.tag == "News" && <div className="border p-1 pt-0 pb-0 mt-0 mb-0 rounded border-green-500 text-green-500"><p>News</p></div>}
-              {post.tag == "Meme" && <div className="border p-0.5 pt-0 pb-0 rounded border-pink-500 text-pink-500">Meme</div>}
+              {post.tag == "Miscellaneous" && <div className="border p-0.5 pt-0 pb-0 rounded border-pink-500 text-pink-500">Miscellaneous</div>}
               {post.tag == "Discussion" && <div className="border p-0.5 pt-0 pb-0 rounded border-blue-500 text-blue-500">Discussion</div>}
               {post.tag == "Question" && <div className="border p-0.5 pt-0 pb-0 rounded border-purple-600 text-purple-600">Question</div>}
               {post.tag == "Announcement" && <div className="border p-0.5 pt-0 pb-0 rounded border-red-600 text-red-600">Announcement</div>}
@@ -308,7 +258,7 @@ const PostView = (props: PostWithUser) => {
           <div className="flex flex-row gap-2">
             <span className="flex sm:hidden">
               {post.tag == "News" && <div className="border p-0.5 rounded border-green-500 text-green-500"><p>News</p></div>}
-              {post.tag == "Meme" && <div className="border p-0.5 rounded border-pink-500 text-pink-500">Meme</div>}
+              {post.tag == "Miscellaneous" && <div className="border p-0.5 rounded border-pink-500 text-pink-500">Miscellaneous</div>}
               {post.tag == "Discussion" && <div className="border p-0.5 rounded border-blue-500 text-blue-500">Discussion</div>}
               {post.tag == "Question" && <div className="border p-0.5 rounded border-purple-600 text-purple-600">Question</div>}
               {post.tag == "Announcement" && <div className="border p-0.5 rounded border-red-600 text-red-600">Announcement</div>}
@@ -318,10 +268,10 @@ const PostView = (props: PostWithUser) => {
         </div>
       </div>
       <div className="flex flex-col gap-1">
-        <div className="text-xl font-semibold">
+        <div className="text-xl text-white font-semibold">
           <span>{post.title}</span>
         </div>
-        <div className="text-slate-300">
+        <div className="post">
           <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}></span>
         </div>
       </div>
