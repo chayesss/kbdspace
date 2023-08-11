@@ -2,6 +2,7 @@ import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import { BsGithub } from "react-icons/bs";
 import Image from "next/image";
 import { MyLogo } from "./logo";
+import Link from "next/link";
 
 const ProfileSection = () => {
 
@@ -41,9 +42,12 @@ const ProfileSection = () => {
                     {!!isSignedIn && <span className="font-light">@{user.username}</span>}
                 </div>
                 <div className="flex flex-col gap-3">
-                    <button className="bg-sky-500 hover:bg-sky-600 duration-150 shadow-lg text-white font-bold py-2 px-4 border border-sky-700 rounded ">
+                    <Link href={`/@${user.username || ""}`}>
+                    <button className="bg-sky-500 hover:bg-sky-600 duration-150 shadow-lg text-white font-bold py-2 w-full px-4 border border-sky-700 rounded ">
                         View Profile
                     </button>
+                    </Link>
+                    
                     <SignOutButton>
                         <button className="bg-slate-100 hover:bg-red-700 duration-150 text-slate-700 hover:text-white font-bold py-2 px-4 border border-slate-700 rounded ">
                             Logout
@@ -63,7 +67,9 @@ export const SideBar = () => {
     return (
         <div className="fixed z-20 w-[22rem] top-6">
             <div className="sticky p-2 flex justify-center">
-                <MyLogo />
+                <Link href="/">
+                    <MyLogo />
+                </Link>
             </div>
             <div className="flex flex-col h-screen overflow-y-scroll no-scrollbar">
                 <div className="">

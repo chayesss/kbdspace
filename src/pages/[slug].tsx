@@ -8,10 +8,12 @@ import { createServerSideHelpers } from '@trpc/react-query/server';
 import superjson from 'superjson';
 import { prisma } from "~/server/db";
 import { appRouter } from "~/server/api/root";
-import type { GetStaticProps,  NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 import Image from "next/image";
 import { LoadingSpinner } from "~/components/loading";
 import PostView from "~/components/postview";
+import { IoIosArrowRoundBack } from "react-icons/io";
+import Link from "next/link";
 dayjs.extend(relativeTime);
 
 
@@ -31,7 +33,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
   const username = slug.replace("@", "");
 
-  await ssg.profile.getUserByUsername.prefetch({ username  });
+  await ssg.profile.getUserByUsername.prefetch({ username });
 
   return {
     props: {
@@ -48,9 +50,9 @@ export const getStaticPaths = () => {
   }
 }
 
-const ProfileFeed = (props: {userId: string}) => {
+const ProfileFeed = (props: { userId: string }) => {
 
-  const {data, isLoading} = api.posts.getPostsByUserId.useQuery({userId: props.userId});
+  const { data, isLoading } = api.posts.getByUserId.useQuery({ userId: props.userId });
 
   if (isLoading) return <LoadingSpinner />;
 
@@ -64,11 +66,11 @@ const ProfileFeed = (props: {userId: string}) => {
 };
 
 
-const ProfilePage: NextPage<{username: string}> = () => {
+const ProfilePage: NextPage<{ username: string }> = () => {
 
-  const { data} = api.profile.getUserByUsername.useQuery({
+  const { data } = api.profile.getUserByUsername.useQuery({
     username: "chayesss"
-  }); 
+  });
 
   // return empty div if data not loaded
   if (!data) return <div>404</div>;
@@ -93,20 +95,28 @@ const ProfilePage: NextPage<{username: string}> = () => {
             <SideBar />
           </div>
           <div className="w-full max-w-6xl ">
-            <div className="flex flex-row gap-4 pb-6 border-b border-slate-700 mt-8">
-              <Image
-                src={data.profileImageUrl}
-                alt="pfp"
-                className="rounded-full w-16 h-16"
-                width={128}
-                height={128}
-              />
-              <div>
+            <div >
+              <div className="mr-2 flex flex-row hover:underline items-center pb-6">
+                <Link href="/" className="w-[8rem] text-slate-100 flex flex-row items-center text-lg gap-2">
+                  <IoIosArrowRoundBack size={24} /><p>Go back</p>
+                </Link>
+              </div>
+              <div className="flex flex-row gap-4 pb-6 border-b border-slate-700 ">
+
+                <Image
+                  src={data.profileImageUrl}
+                  alt="pfp"
+                  className="rounded-full w-16 h-16"
+                  width={128}
+                  height={128}
+                />
                 <div>
-                  <h1 className="text-2xl text-white tracking-widest font-bold">{data.fullname}</h1>
-                </div>
-                <div>
-                  <h1 className="text-2xl text-slate-300 tracking-wider font-thin">{`@${data.username || ""}`}</h1>
+                  <div>
+                    <h1 className="text-2xl text-white tracking-widest font-bold">{data.fullname}</h1>
+                  </div>
+                  <div>
+                    <h1 className="text-2xl text-slate-300 tracking-wider font-thin">{`@${data.username || ""}`}</h1>
+                  </div>
                 </div>
               </div>
             </div>

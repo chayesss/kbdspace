@@ -6,6 +6,7 @@ import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import { BsGithub } from "react-icons/bs";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 
 
 
@@ -45,9 +46,11 @@ const ProfileSection = () => {
         {!!isSignedIn && <span className="font-light">@{user.username}</span>}
       </div>
       <div className="flex flex-col">
-        <button className="bg-sky-500 hover:bg-sky-600 duration-150 shadow-lg  text-white font-bold py-2 px-4 border border-sky-700 rounded mr-4 ml-4 mt-2 mb-2">
-          View Profile
-        </button>
+        <Link className="mx-4" href={`/@${user.username || ""}`}>
+          <button className="bg-sky-500 hover:bg-sky-600 duration-150 shadow-lg text-white font-bold py-2 w-full px-4 border border-sky-700 rounded ">
+            View Profile
+          </button>
+        </Link>
         <SignOutButton>
           <button className="bg-slate-100 hover:bg-red-700 duration-150 text-slate-700 hover:text-white font-bold py-2 px-4 border border-slate-700 rounded mr-4 ml-4 mt-2 mb-2">
             Logout
