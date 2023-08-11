@@ -15,6 +15,7 @@ import DOMPurify from "isomorphic-dompurify";
 import dynamic from "next/dynamic";
 import 'react-quill/dist/quill.snow.css';
 import toast from "react-hot-toast";
+import Link from "next/link";
 dayjs.extend(relativeTime);
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -251,7 +252,7 @@ const PostView = (props: PostWithUser) => {
         <div className="flex flex-col gap-1">
           <div className="flex flex-row gap-2">
             <div className="flex flex-row gap-2">
-              <span className="font-semibold">@{author.username}</span>
+              <Link href={`/@${author.username}`}><span className="font-semibold">@{author.username}</span></Link>
               <span> · </span>
             </div>
             <div className="flex flex-row gap-2">
@@ -259,22 +260,22 @@ const PostView = (props: PostWithUser) => {
               <span className="hidden sm:flex"> · </span>
             </div>
             <span className="hidden items-center sm:flex">
-              {post.tag == "News" && <div className="border p-1 pt-0 pb-0 mt-0 mb-0 rounded border-green-500 text-green-500"><p>News</p></div>}
-              {post.tag == "Miscellaneous" && <div className="border p-0.5 pt-0 pb-0 rounded border-pink-500 text-pink-500">Miscellaneous</div>}
-              {post.tag == "Discussion" && <div className="border p-0.5 pt-0 pb-0 rounded border-blue-500 text-blue-500">Discussion</div>}
-              {post.tag == "Question" && <div className="border p-0.5 pt-0 pb-0 rounded border-purple-600 text-purple-600">Question</div>}
-              {post.tag == "Announcement" && <div className="border p-0.5 pt-0 pb-0 rounded border-red-600 text-red-600">Announcement</div>}
-              {post.tag == "Feedback" && <div className="border p-0.5 pt-0 pb-0 rounded border-yellow-500 text-yellow-500">Feedback</div>}
+              {post.tag == "News" && <div className="p-1 pt-0 pb-0 mt-0 mb-0 rounded  text-green-500"><p>News</p></div>}
+              {post.tag == "Miscellaneous" && <div className="p-0.5 pt-0 pb-0 rounded  text-pink-500">Miscellaneous</div>}
+              {post.tag == "Discussion" && <div className="p-0.5 pt-0 pb-0 rounded text-blue-500">Discussion</div>}
+              {post.tag == "Question" && <div className="p-0.5 pt-0 pb-0 rounded  text-purple-600">Question</div>}
+              {post.tag == "Announcement" && <div className="p-0.5 pt-0 pb-0 rounded  text-red-600">Announcement</div>}
+              {post.tag == "Feedback" && <div className="p-0.5 pt-0 pb-0 rounded  text-yellow-500">Feedback</div>}
             </span>
           </div>
           <div className="flex flex-row gap-2">
             <span className="flex sm:hidden">
-              {post.tag == "News" && <div className="border p-0.5 rounded border-green-500 text-green-500"><p>News</p></div>}
-              {post.tag == "Miscellaneous" && <div className="border p-0.5 rounded border-pink-500 text-pink-500">Miscellaneous</div>}
-              {post.tag == "Discussion" && <div className="border p-0.5 rounded border-blue-500 text-blue-500">Discussion</div>}
-              {post.tag == "Question" && <div className="border p-0.5 rounded border-purple-600 text-purple-600">Question</div>}
-              {post.tag == "Announcement" && <div className="border p-0.5 rounded border-red-600 text-red-600">Announcement</div>}
-              {post.tag == "Feedback" && <div className="border p-0.5 rounded border-yellow-500 text-yellow-500">Feedback</div>}
+              {post.tag == "News" && <div className="p-0.5 rounded  text-green-500"><p>News</p></div>}
+              {post.tag == "Miscellaneous" && <div className="p-0.5 rounded  text-pink-500">Miscellaneous</div>}
+              {post.tag == "Discussion" && <div className="p-0.5 rounded  text-blue-500">Discussion</div>}
+              {post.tag == "Question" && <div className="p-0.5 rounded  text-purple-600">Question</div>}
+              {post.tag == "Announcement" && <div className="p-0.5 rounded  text-red-600">Announcement</div>}
+              {post.tag == "Feedback" && <div className="p-0.5 rounded text-yellow-500">Feedback</div>}
             </span>
           </div>
         </div>
@@ -289,12 +290,12 @@ const PostView = (props: PostWithUser) => {
       </div>
       <hr className=" border-slate-600 " />
       <div className="flex flex-row gap-2 items-center text-slate-300">
-      <button>
-              <p className="hover:text-white hover:decoration:stroke duration-100 hover:underline">view</p>
-            </button>
+        <button>
+          <Link href={`/post/${post.id}`}><p className="hover:text-white hover:decoration:stroke duration-100 hover:underline">view</p></Link>
+        </button>
         <span> · </span>
         <button>
-              <p className="hover:text-white hover:decoration:stroke duration-100 hover:underline">share</p>
+          <p className="hover:text-white hover:decoration:stroke duration-100 hover:underline">share</p>
         </button>
         {!!user && user.id == author.id &&
           <div>
