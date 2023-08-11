@@ -1,6 +1,5 @@
 import Head from "next/head";
 import { api } from "~/utils/api";
-import { LoadingSpinner } from "~/components/loading";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import { SideBar } from "~/components/sidebar";
@@ -10,7 +9,9 @@ import superjson from 'superjson';
 import { prisma } from "~/server/db";
 import { appRouter } from "~/server/api/root";
 import type { GetStaticProps,  NextPage } from "next";
-import { BiDotsVertical } from "react-icons/bi";
+import Image from "next/image";
+import { LoadingSpinner } from "~/components/loading";
+import PostView from "~/components/postview";
 dayjs.extend(relativeTime);
 
 
@@ -47,8 +48,23 @@ export const getStaticPaths = () => {
   }
 }
 
+const ProfileFeed = (props: {userId: string}) => {
 
-const ProfilePage: NextPage<{username: string}> = ({ username }) => {
+  const {data, isLoading} = api.posts.getPostsByUserId.useQuery({userId: props.userId});
+
+  if (isLoading) return <LoadingSpinner />;
+
+  return (
+    <div className="flex flex-col gap-4 mt-6">
+      {data?.map((fullPost) => (
+        <PostView {...fullPost} key={fullPost.post.id} />))}
+    </div>
+  )
+
+};
+
+
+const ProfilePage: NextPage<{username: string}> = () => {
 
   const { data} = api.profile.getUserByUsername.useQuery({
     username: "chayesss"
@@ -77,8 +93,25 @@ const ProfilePage: NextPage<{username: string}> = ({ username }) => {
             <SideBar />
           </div>
           <div className="w-full max-w-6xl ">
+            <div className="flex flex-row gap-4 pb-6 border-b border-slate-700 mt-8">
+              <Image
+                src={data.profileImageUrl}
+                alt="pfp"
+                className="rounded-full w-16 h-16"
+                width={128}
+                height={128}
+              />
+              <div>
+                <div>
+                  <h1 className="text-2xl text-white tracking-widest font-bold">{data.fullname}</h1>
+                </div>
+                <div>
+                  <h1 className="text-2xl text-slate-300 tracking-wider font-thin">{`@${data.username || ""}`}</h1>
+                </div>
+              </div>
+            </div>
             <div>
-              
+              <ProfileFeed userId={data.id} />
             </div>
           </div>
         </div>
