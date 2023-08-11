@@ -14,6 +14,7 @@ import { useState } from "react";
 import DOMPurify from "isomorphic-dompurify";
 import dynamic from "next/dynamic";
 import 'react-quill/dist/quill.snow.css';
+import toast from "react-hot-toast";
 dayjs.extend(relativeTime);
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -50,6 +51,14 @@ const PostsManager = () => {
 
       void ctx.posts.getAll.invalidate();
 
+    },
+    onError: (e) => {
+      
+      const errorMessage = e.data?.code?.toString();
+
+      if (errorMessage) {
+        toast.error(errorMessage);
+      }
     }
   });
 
@@ -215,6 +224,9 @@ const PostView = (props: PostWithUser) => {
   const { mutate } = api.posts.delete.useMutation({
     onSuccess: () => {
       void ctx.posts.getAll.invalidate();
+    },
+    onError: () => {
+      toast.error("Error deleting post");
     }
   });
 

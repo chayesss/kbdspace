@@ -67,42 +67,6 @@ export const postsRouter = createTRPCRouter({
 
   }),
 
-  getAllAsc: publicProcedure.query(async ({ ctx }) => {
-    const posts = await ctx.prisma.post.findMany({
-      take: 100,
-      orderBy: [{createdAt: "asc"}],
-    });
-
-    const userList = await clerkClient.users.getUserList({
-      userId: posts.map((post) => post.authorId),
-      limit: 100,
-    });
-
-    const users = userList.map(filterUserForClient);
-
-
-    return posts.map((post) => {
-      {
-        const author = users.find((user) => user.id === post.authorId);
-
-        if (!author) {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Author not found"
-          });
-        }
-
-
-
-        return {
-          post,
-          author,
-        };
-      }
-    });
-
-  }),
-
   create: privateProcedure.input(
     z.object({
       title: z.string().min(1).max(255),
@@ -136,6 +100,7 @@ export const postsRouter = createTRPCRouter({
   delete: privateProcedure.input(z.object({ 
     postId: z.string().min(1),
   })).mutation(async ({ ctx, input }) => {
+
     
     const deletePost = await ctx.prisma.post.delete({
       where: {
