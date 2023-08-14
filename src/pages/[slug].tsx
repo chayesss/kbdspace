@@ -59,7 +59,7 @@ const ProfileFeed = (props: { userId: string }) => {
   return (
     <div className="flex flex-col gap-4 mt-6">
       {data?.map((fullPost) => (
-        <PostView {...fullPost} key={fullPost.post.id} />))}
+        <PostView {...fullPost} key={fullPost.post.id} isFullPost={false} />))}
     </div>
   )
 

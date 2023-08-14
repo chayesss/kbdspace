@@ -15,8 +15,8 @@ dayjs.extend(relativeTime);
 
 type PostWithUser = RouterOutputs["posts"]["getAll"][number];
 //creates individual post view
-const PostView = (props: PostWithUser) => {
-    const { post, author } = props;
+const PostView = (props: PostWithUser & { isFullPost: boolean }) => {
+    const { post, author, isFullPost } = props;
     const { user } = useUser();
 
     const [toggleDelete, setToggleDelete] = useState(false);
@@ -32,6 +32,14 @@ const PostView = (props: PostWithUser) => {
         }
     });
 
+    //character limit for on home page
+    const content = DOMPurify.sanitize(post.content);
+    const wordLimit = 100;
+
+    const words = content.split(/\s+/).filter(word => word.trim() !== '');
+    const displayWords = words.slice(0, wordLimit);
+
+    const isContentExceeded = words.length > wordLimit;
 
 
     return (
@@ -91,16 +99,26 @@ const PostView = (props: PostWithUser) => {
                     </Link>
                     
                 </div>
-                <div className="post">
-                    <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}></span>
-                </div>
+                {(!!isContentExceeded && !isFullPost) ?
+                    <div className="post">
+                        <span dangerouslySetInnerHTML={{ __html: displayWords.join(" ") + "... <a href='/post/" + post.id + "' class='inline hover:underline'>Read more</a>" }}></span>
+                    </div> :
+                    <div className="post">
+                        <span dangerouslySetInnerHTML={{ __html: content }}></span>
+                    </div>
+                }
+
             </div>
             <hr className=" border-slate-600 " />
             <div className="flex flex-row gap-2 items-center text-slate-300">
-                <button>
-                    <Link href={`/post/${post.id}`}><p className="hover:text-white hover:decoration:stroke duration-100 hover:underline">view</p></Link>
-                </button>
-                <span> · </span>
+                {!isFullPost &&
+                    <div>
+                        <button>
+                            <Link href={`/post/${post.id}`}><p className="hover:text-white hover:decoration:stroke duration-100 hover:underline">view</p></Link>
+                        </button>
+                        <span> · </span>
+                    </div>
+                }
                 <button>
                     <p className="hover:text-white hover:decoration:stroke duration-100 hover:underline">share</p>
                 </button>

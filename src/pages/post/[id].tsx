@@ -76,7 +76,7 @@ const PostPage: NextPage<{id : string}> = ({ id }) => {
               </div>
             </div>
             <div className="">
-              <PostView {...data}/>
+              <PostView {...data} isFullPost={true}/>
             </div>
           </div>
         </div>

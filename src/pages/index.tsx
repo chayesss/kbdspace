@@ -52,7 +52,7 @@ const PostsManager = () => {
 
     },
     onError: (e) => {
-      
+
       const errorMessage = e.data?.code?.toString();
 
       if (errorMessage) {
@@ -80,7 +80,7 @@ const PostsManager = () => {
             </div>
           }
           {!!isSignedIn &&
-            <button className="w-[8rem] flex flex-row items-center text-lg gap-2" onClick={() => { setCreatingPost(true); setCount(0); setTitleCount(0); setTag(""); setContent(""); setTitle("")}}>
+            <button className="w-[8rem] flex flex-row items-center text-lg gap-2" onClick={() => { setCreatingPost(true); setCount(0); setTitleCount(0); setTag(""); setContent(""); setTitle("") }}>
               <p>Create Post</p><IoCreateOutline size={24} />
             </button>}
         </div>
@@ -131,7 +131,7 @@ const PostsManager = () => {
                   }
                 </div>
               </div>
-              
+
               <label className="text-2xl font-semibold" htmlFor="tag">Tag*</label>
               <select
                 className="block py-2.5 w-1/6 px-1 text-sm bg-transparent border-2 rounded-md border-slate-800 focus:outline-none focus:ring-0 focus:border-slate-400 focus:bg-gray-950 peer"
@@ -152,7 +152,7 @@ const PostsManager = () => {
               <ReactQuill
                 id="content"
                 value={content}
-                onChange={(e) => {setContent(e); setCount(e.replace(/(<([^>]+)>)/gi, "").length)}}
+                onChange={(e) => { setContent(e); setCount(e.replace(/(<([^>]+)>)/gi, "").length) }}
                 className="h-[12rem] pb-8"
               />
               <div className="flex justify-end">
@@ -165,17 +165,17 @@ const PostsManager = () => {
                     {count}/2000
                   </p>
                 }
-                
+
               </div>
               {(count > 0 && count < 2000) && (titleCount > 0 && titleCount < 250) && (tag !== "") ?
-              <button className="bg-sky-400 hover:bg-sky-600 duration-150 text-white font-bold py-2 px-4 border border-sky-700 rounded mt-2 mb-2" onClick={() => mutate({ title: title, content: content, tag: tag })}>
-                Post
-              </button> : 
-              <button className="bg-sky-800 duration-150 text-slate-400 cursor-not-allowed font-bold py-2 px-4 border border-sky-700 rounded mt-2 mb-2" disabled >
-              Post
-            </button>
-            }
-              
+                <button className="bg-sky-400 hover:bg-sky-600 duration-150 text-white font-bold py-2 px-4 border border-sky-700 rounded mt-2 mb-2" onClick={() => mutate({ title: title, content: content, tag: tag })}>
+                  Post
+                </button> :
+                <button className="bg-sky-800 duration-150 text-slate-400 cursor-not-allowed font-bold py-2 px-4 border border-sky-700 rounded mt-2 mb-2" disabled >
+                  Post
+                </button>
+              }
+
             </div>
 
           </motion.div>}
@@ -191,18 +191,18 @@ const PostsManager = () => {
 // section with all posts
 const FrontPage = () => {
 
-  const { data }= api.posts.getAll.useQuery();
+  const { data } = api.posts.getAll.useQuery();
 
 
 
   if (!data) return (<LoadingSpinner />);
 
-  
+
 
   return (
     <div className="flex flex-col gap-4 mt-6">
       {data?.map((fullPost) => (
-        <PostView {...fullPost} key={fullPost.post.id} />))}
+        <PostView {...fullPost} key={fullPost.post.id} isFullPost={false} />))}
     </div>
   )
 };
@@ -224,7 +224,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>KBDSpace</title>
+        <title>Home / KBDSpace</title>
         <meta name="description" content="KBDSpace is a mechanical keyboard discussion forum for enthusiasts!" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
