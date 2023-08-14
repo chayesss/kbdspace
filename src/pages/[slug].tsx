@@ -54,6 +54,8 @@ const ProfileFeed = (props: { userId: string }) => {
 
   const { data, isLoading } = api.posts.getByUserId.useQuery({ userId: props.userId });
 
+  if (!data) return <div className="flex justify-center text-xl mt-8">User has not posted.</div>;
+
   if (isLoading) return <LoadingSpinner />;
 
   return (
@@ -66,14 +68,23 @@ const ProfileFeed = (props: { userId: string }) => {
 };
 
 
-const ProfilePage: NextPage<{ username: string }> = () => {
+const ProfilePage: NextPage<{ username: string }> = ({username}) => {
 
   const { data } = api.profile.getUserByUsername.useQuery({
-    username: "chayesss"
+    username,
   });
 
+  const count = api.posts.count.useQuery( {userId: data?.id || " "});
+
+  api.posts.getByUserId.useQuery({ userId: data?.id || " " });
+
   // return empty div if data not loaded
-  if (!data) return <div>404</div>;
+  if (!data) return <>
+  <Head>
+    <title>{`404: Page not found / KBDSpace`}</title>
+  </Head>
+  <div className="flex justify-center text-lg font-thin items-center h-screen">404: page not found.</div>
+  </>;
 
 
 
@@ -102,7 +113,6 @@ const ProfilePage: NextPage<{ username: string }> = () => {
                 </Link>
               </div>
               <div className="flex flex-row gap-4 pb-6 border-b border-slate-700 ">
-
                 <Image
                   src={data.profileImageUrl}
                   alt="pfp"
@@ -114,8 +124,10 @@ const ProfilePage: NextPage<{ username: string }> = () => {
                   <div>
                     <h1 className="text-2xl text-white tracking-widest font-bold">{data.fullname}</h1>
                   </div>
-                  <div>
-                    <h1 className="text-2xl text-slate-300 tracking-wider font-thin">{`@${data.username || ""}`}</h1>
+                  <div className="flex flex-row gap-2 items-center">
+                    <h1 className="text-lg text-slate-300 tracking-wider font-thin">{`@${data.username || ""}`}</h1>
+                    <span className="text-slate-300"> · </span>
+                    <h1 className="text-lg text-slate-300 tracking-wider font-thin">{`${count.data || ""} posts`}</h1>
                   </div>
                 </div>
               </div>

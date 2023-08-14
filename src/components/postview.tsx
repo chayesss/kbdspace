@@ -26,6 +26,9 @@ const PostView = (props: PostWithUser & { isFullPost: boolean }) => {
     const { mutate } = api.posts.delete.useMutation({
         onSuccess: () => {
             void ctx.posts.getAll.invalidate();
+            void ctx.posts.count.invalidate();
+            void ctx.posts.getByUserId.invalidate();
+            toast.success("Post deleted");
         },
         onError: () => {
             toast.error("Error deleting post");

@@ -83,6 +83,16 @@ export const postsRouter = createTRPCRouter({
     }).then(addUserDataToPosts),
     ),
 
+  count: publicProcedure.input(
+    z.object({
+      userId: z.string()
+    })).query(({ input, ctx }) => ctx.prisma.post.count({
+      where: {
+        authorId: input.userId,
+      },
+    })
+  ),
+
   create: privateProcedure.input(
     z.object({
       title: z.string().min(1).max(255),
@@ -127,6 +137,8 @@ export const postsRouter = createTRPCRouter({
     return deletePost;
 
   }),
+
+  
 
 
 });
