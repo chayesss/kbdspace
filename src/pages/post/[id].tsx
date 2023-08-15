@@ -9,6 +9,7 @@ import PostView from "~/components/postview";
 import { generateSSGHelper } from "~/server/helpers/ssgHelper";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import Link from "next/link";
+import { useRouter } from  "next/router"
 dayjs.extend(relativeTime);
 
 
@@ -23,6 +24,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 
 
+  
   await ssg.posts.getById.prefetch({ id  });
 
   return {
@@ -46,6 +48,8 @@ export const getStaticPaths = () => {
 const PostPage: NextPage<{id : string}> = ({ id }) => {
 
   const { data } = api.posts.getById.useQuery({ id }); 
+  
+  const router = useRouter();
 
   // return empty div if data not loaded
   if (!data) return <div>404</div>;
@@ -70,9 +74,9 @@ const PostPage: NextPage<{id : string}> = ({ id }) => {
           <div className="w-full max-w-6xl ">
             <div className="flex flex-row gap-4 pb-6">
               <div className="mr-2 flex flex-row hover:underline items-center">
-                  <Link href="/" className="w-[8rem] text-slate-100 flex flex-row items-center text-lg gap-2">
-                    <IoIosArrowRoundBack size={24} /><p>Go back</p>
-                  </Link>
+                <button className="w-[8rem] text-slate-100 flex flex-row items-center text-lg gap-2" onClick={() => router.back()}>
+                  <IoIosArrowRoundBack size={24} /><p>Go back</p>
+                </button>
               </div>
             </div>
             <div className="">

@@ -51,7 +51,7 @@ const PostView = (props: PostWithUser & { isFullPost: boolean }) => {
             toast.success("Post edited");
         },
         onError: () => {
-            toast.error("Error deleting post");
+            toast.error("Error editing post");
         }
     });
 
@@ -66,6 +66,7 @@ const PostView = (props: PostWithUser & { isFullPost: boolean }) => {
 
     const [count, setCount] = useState(post.content.replace(/(<([^>]+)>)/gi, "").length);
     const [titleCount, setTitleCount] = useState(post.title.length);
+
 
 
     return (
@@ -94,7 +95,7 @@ const PostView = (props: PostWithUser & { isFullPost: boolean }) => {
                             <span> · </span>
                         </div>
                         <div className="flex flex-row gap-2">
-                            <span className="font-thin">{`  ${dayjs(post.createdAt).fromNow()}`}</span>
+                            <span className="font-thin">{`  ${dayjs(post.createdAt).fromNow()}`} </span>
                             <span className="hidden sm:flex"> · </span>
                         </div>
                         <span className="hidden items-center sm:flex">
@@ -231,7 +232,7 @@ const PostView = (props: PostWithUser & { isFullPost: boolean }) => {
 
                                             </div>
                                             {(count > 0 && count < 2000) && (titleCount > 0 && titleCount < 250) && (tag !== "") ?
-                                                <button className="bg-sky-400 hover:bg-sky-600 duration-150 text-white font-bold py-2 px-4 border border-sky-700 rounded mt-2 " onClick={() => {editPost({ postId: post.id, title: title, content: content, tag: tag }); setToggleEdit(false)}}>
+                                                <button className="bg-sky-400 hover:bg-sky-600 duration-150 text-white font-bold py-2 px-4 border border-sky-700 rounded mt-2 " onClick={() => {editPost({ postId: post.id, title: title, content: content, tag: tag }); setToggleEdit(false); }}>
                                                     Edit Post
                                                 </button> :
                                                 <button className="bg-sky-800 duration-150 text-slate-400 cursor-not-allowed font-bold py-2 px-4 border border-sky-700 rounded mt-2 " disabled >

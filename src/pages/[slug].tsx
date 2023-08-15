@@ -14,6 +14,7 @@ import { LoadingSpinner } from "~/components/loading";
 import PostView from "~/components/postview";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import Link from "next/link";
+import { useRouter } from "next/router";
 dayjs.extend(relativeTime);
 
 
@@ -78,6 +79,8 @@ const ProfilePage: NextPage<{ username: string }> = ({username}) => {
 
   api.posts.getByUserId.useQuery({ userId: data?.id || " " });
 
+  const router = useRouter();
+
   // return empty div if data not loaded
   if (!data) return <>
   <Head>
@@ -107,10 +110,10 @@ const ProfilePage: NextPage<{ username: string }> = ({username}) => {
           </div>
           <div className="w-full max-w-6xl ">
             <div >
-              <div className="mr-2 flex flex-row hover:underline items-center pb-6">
-                <Link href="/" className="w-[8rem] text-slate-100 flex flex-row items-center text-lg gap-2">
+              <div className="mr-2 flex flex-row items-center pb-6">
+                <button className="w-[8rem] text-slate-100 flex flex-row items-center text-lg gap-2" onClick={() => router.back()}>
                   <IoIosArrowRoundBack size={24} /><p>Go back</p>
-                </Link>
+                </button>
               </div>
               <div className="flex flex-row gap-4 pb-6 border-b border-slate-700 ">
                 <Image
