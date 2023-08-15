@@ -1,28 +1,52 @@
-# Create T3 App
+# KBDSpace
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+[See it live here: https://kbdspace-eosin.vercel.app/](https://kbdspace-eosin.vercel.app/)
 
-## What's next? How do I make an app with this?
+## What is this?
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+KBDSpace is a project a built using [create-t3-app](https://create.t3.gg)
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+I wanted to create a full-stack forum app, similar to Reddit and Twitter, to demonstrate my skills as a developer. 
+
+Features Include:
+- Home page for post browsing
+- Create/Edit/Delete posts
+- User profiles
+- Dedicated post pages 
+- Secure authentication and session management with Clerk
+- Modern, sleek design
+
+Here are some features that were intentionally left out as they did not fit my desired scope for the project:
+- Filtering/Sorting
+- Commenting
+- Direct Messaging
+- Moderation Tools
+
+## Stack
 
 - [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
 - [Prisma](https://prisma.io)
 - [Tailwind CSS](https://tailwindcss.com)
 - [tRPC](https://trpc.io)
 
-## Learn More
+## What did I deploy it on?
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+- Clerk [https://clerk.com/](https://clerk.com/)
+- Planetscale [https://planetscale.com/](https://planetscale.com/)
+- Upstash [https://upstash.com/](https://upstash.com/)
+- Vercel [https://vercel.com/](https://vercel.com/)
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+## Acknowledgements  
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+The following resources were used during the development of this website:
+- [https://github.com/zenoamaro/react-quill](https://github.com/zenoamaro/react-quill)
+- [https://github.com/cure53/DOMPurify](https://github.com/cure53/DOMPurify)
+- [https://github.com/iamkun/dayjs](https://github.com/iamkun/dayjs)
+- [https://github.com/timolins/react-hot-toast](https://github.com/timolins/react-hot-toast)
+- [https://github.com/colinhacks/zod](https://github.com/colinhacks/zod)
+- [https://github.com/framer/motion](https://github.com/framer/motion)
+- [https://react-icons.github.io/react-icons/](https://react-icons.github.io/react-icons/)
+- [https://daisyui.com/](https://daisyui.com/)
 
-## How do I deploy this?
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+
