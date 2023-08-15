@@ -138,6 +138,28 @@ export const postsRouter = createTRPCRouter({
 
   }),
 
+  edit: privateProcedure.input(z.object({
+    postId: z.string(),
+    title: z.string().min(1).max(255),
+    content: z.string().min(1).max(2500),
+    tag: z.string().min(1).max(255),
+  })).mutation(async ({ctx, input}) => {
+
+    const editPost = await ctx.prisma.post.update({
+      where: {
+        id: input.postId,
+      },
+      data: {
+        title : input.title,
+        content : input.content,
+        tag : input.tag,
+      }
+    })
+
+    return editPost;
+
+  }),
+
   
 
 

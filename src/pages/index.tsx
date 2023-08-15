@@ -30,13 +30,18 @@ const PostsManager = () => {
   const ctx = api.useContext();
 
   const variants = {
-    closed: { height: 0, marginTop: 0 },
-    open: { height: 'auto', marginTop: "1.5rem" },
+    closed: {
+      height: 0,
+      marginTop: 0,
+    },
+    open: {
+      height: 'auto',
+      marginTop: "1.5rem",
+    },
   };
 
 
-  const [count, setCount] = useState(0);
-  const [titleCount, setTitleCount] = useState(0);
+  
 
 
   const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
@@ -65,7 +70,8 @@ const PostsManager = () => {
   const [content, setContent] = useState("");
   const [tag, setTag] = useState("");
 
-
+  const [count, setCount] = useState(content.replace(/(<([^>]+)>)/gi, "").length);
+  const [titleCount, setTitleCount] = useState(title.length);
 
   return (
     <div className="flex flex-col">
@@ -80,7 +86,7 @@ const PostsManager = () => {
             </div>
           }
           {!!isSignedIn &&
-            <button className="w-[8rem] flex flex-row items-center text-lg gap-2" onClick={() => { setCreatingPost(true); setCount(0); setTitleCount(0); setTag(""); setContent(""); setTitle("") }}>
+            <button className="w-[8rem] flex flex-row items-center text-lg gap-2" onClick={() => { setCreatingPost(true);  }}>
               <p>Create Post</p><IoCreateOutline size={24} />
             </button>}
         </div>
@@ -155,13 +161,13 @@ const PostsManager = () => {
                 onChange={(e) => { setContent(e); setCount(e.replace(/(<([^>]+)>)/gi, "").length) }}
                 className="h-[12rem] pb-8"
               />
-              <div className="flex justify-end">
+              <div className="hidden sm:flex justify-end">
                 {count > 2000 &&
                   <p className="text-red-500">
                     {count}/2000
                   </p>}
                 {count <= 2000 &&
-                  <p className="text-slate-300">
+                  <p className="hidden sm:flex text-slate-300">
                     {count}/2000
                   </p>
                 }
