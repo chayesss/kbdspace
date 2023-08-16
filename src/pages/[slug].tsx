@@ -13,7 +13,6 @@ import Image from "next/image";
 import { LoadingSpinner } from "~/components/loading";
 import PostView from "~/components/postview";
 import { IoIosArrowRoundBack } from "react-icons/io";
-import Link from "next/link";
 import { useRouter } from "next/router";
 dayjs.extend(relativeTime);
 
