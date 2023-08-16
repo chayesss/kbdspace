@@ -67,6 +67,8 @@ const PostView = (props: PostWithUser & { isFullPost: boolean }) => {
     const [count, setCount] = useState(post.content.replace(/(<([^>]+)>)/gi, "").length);
     const [titleCount, setTitleCount] = useState(post.title.length);
 
+    
+    const commentCount = api.comments.countByPostId.useQuery({ postId: post.id });
 
 
     return (
@@ -141,14 +143,10 @@ const PostView = (props: PostWithUser & { isFullPost: boolean }) => {
                 {!isFullPost &&
                     <div>
                         <button>
-                            <Link href={`/post/${post.id}`}><p className="hover:text-white hover:decoration:stroke duration-100 hover:underline">view</p></Link>
+                            <Link href={`/post/${post.id}`}><p className="hover:text-white hover:decoration:stroke duration-100 hover:underline">{commentCount.data} comments</p></Link>
                         </button>
-                        <span> · </span>
                     </div>
                 }
-                <button>
-                    <p className="hover:text-white hover:decoration:stroke duration-100 hover:underline">share</p>
-                </button>
                 {!!user && user.id == author.id &&
                     <div>
                         <span> · </span>

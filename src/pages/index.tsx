@@ -162,18 +162,18 @@ const PostsManager = () => {
                 className="h-[12rem] pb-8"
               />
               <div className="hidden sm:flex justify-end">
-                {count > 2000 &&
+                {count > 10000 &&
                   <p className="text-red-500">
-                    {count}/2000
+                    {count}/10000
                   </p>}
-                {count <= 2000 &&
+                {count <= 10000 &&
                   <p className="hidden sm:flex text-slate-300">
-                    {count}/2000
+                    {count}/10000
                   </p>
                 }
 
               </div>
-              {(count > 0 && count < 2000) && (titleCount > 0 && titleCount < 250) && (tag !== "") ?
+              {(count > 0 && count < 10000) && (titleCount > 0 && titleCount < 250) && (tag !== "") ?
                 <button className="bg-sky-400 hover:bg-sky-600 duration-150 text-white font-bold py-2 px-4 border border-sky-700 rounded mt-2 mb-2" onClick={() => mutate({ title: title, content: content, tag: tag })}>
                   Post
                 </button> :

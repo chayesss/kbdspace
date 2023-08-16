@@ -96,7 +96,7 @@ export const postsRouter = createTRPCRouter({
   create: privateProcedure.input(
     z.object({
       title: z.string().min(1).max(255),
-      content: z.string().min(1).max(2500),
+      content: z.string().min(1).max(15000),
       tag: z.string().min(1).max(255),
     }))
     .mutation(async ({ ctx, input }) => {
@@ -141,7 +141,7 @@ export const postsRouter = createTRPCRouter({
   edit: privateProcedure.input(z.object({
     postId: z.string(),
     title: z.string().min(1).max(255),
-    content: z.string().min(1).max(2500),
+    content: z.string().min(1).max(15000),
     tag: z.string().min(1).max(255),
   })).mutation(async ({ctx, input}) => {
 

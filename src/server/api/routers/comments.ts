@@ -58,10 +58,30 @@ export const commentsRouter = createTRPCRouter({
     return addUserDataToComments(comments);
 
   }),
+  
+  countByUserId: publicProcedure.input(
+    z.object({
+      userId: z.string()
+    })).query(({ input, ctx }) => ctx.prisma.comment.count({
+      where: {
+        authorId: input.userId,
+      },
+    })
+  ),
+
+  countByPostId: publicProcedure.input(
+    z.object({
+      postId: z.string()
+    })).query(({ input, ctx }) => ctx.prisma.comment.count({
+      where: {
+        postId: input.postId,
+      },
+    })
+  ),
 
   create: privateProcedure.input(z.object({
     postId: z.string(),
-    content: z.string().min(1).max(2500),
+    content: z.string().min(1).max(15000),
   })).mutation(async ({ ctx, input }) => {
 
     const authorId = ctx.userId;
@@ -87,6 +107,18 @@ export const commentsRouter = createTRPCRouter({
 
   }),
 
+  getByUserId: publicProcedure.input(
+    z.object({
+      userId: z.string()
+    }))
+    .query(({ input, ctx }) => ctx.prisma.comment.findMany({
+      where: {
+        authorId: input.userId,
+      },
+      orderBy: [{ createdAt: "desc" }],
+    }).then(addUserDataToComments),
+    ),
+
   delete: privateProcedure.input(z.object({
     commentId: z.string().min(1),
   })).mutation(async ({ ctx, input }) => {
@@ -104,7 +136,7 @@ export const commentsRouter = createTRPCRouter({
 
   edit: privateProcedure.input(z.object({
     commentId: z.string(),
-    content: z.string().min(1).max(2500),
+    content: z.string().min(1).max(15000),
   })).mutation(async ({ctx, input}) => {
 
     const editPost = await ctx.prisma.comment.update({

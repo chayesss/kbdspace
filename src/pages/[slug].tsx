@@ -14,6 +14,9 @@ import { LoadingSpinner } from "~/components/loading";
 import PostView from "~/components/postview";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { useRouter } from "next/router";
+import CommentView from "~/components/commentview";
+import { useState } from "react";
+import { BiDotsVertical } from "react-icons/bi";
 dayjs.extend(relativeTime);
 
 
@@ -50,13 +53,13 @@ export const getStaticPaths = () => {
   }
 }
 
-const ProfileFeed = (props: { userId: string }) => {
+const ProfilePostFeed = (props: { userId: string }) => {
 
   const { data, isLoading } = api.posts.getByUserId.useQuery({ userId: props.userId });
 
-  if (!data) return <div className="flex justify-center text-xl mt-8">User has not posted.</div>;
+  if (!data) return <LoadingSpinner />;
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading) return <div className="flex justify-center text-lg font-medium pt-[10rem]">User has not posted.</div>;
 
   return (
     <div className="flex flex-col gap-4 mt-6">
@@ -67,6 +70,23 @@ const ProfileFeed = (props: { userId: string }) => {
 
 };
 
+const ProfileCommentFeed = (props: { userId: string }) => {
+
+  const { data } = api.comments.getByUserId.useQuery({ userId: props.userId });
+
+  if (!data) return <LoadingSpinner />;
+
+  if (data.length == 0) return <div className="flex justify-center text-lg font-medium pt-[10rem]">User has not commented.</div>;
+
+  return (
+    <div className="flex flex-col gap-4 mt-6">
+      {data?.map((fullPost) => (
+        <CommentView {...fullPost} key={fullPost.comment.id}  />))}
+    </div> 
+  ) 
+
+};
+
 
 const ProfilePage: NextPage<{ username: string }> = ({username}) => {
 
@@ -74,11 +94,14 @@ const ProfilePage: NextPage<{ username: string }> = ({username}) => {
     username,
   });
 
-  const count = api.posts.count.useQuery( {userId: data?.id || " "});
+  const postCount = api.posts.count.useQuery( {userId: data?.id || " "});
+  const commentCount = api.comments.countByUserId.useQuery({ userId: data?.id || " " });
 
   api.posts.getByUserId.useQuery({ userId: data?.id || " " });
 
   const router = useRouter();
+
+  const [isPosts, setIsPosts] = useState(true);
 
   // return empty div if data not loaded
   if (!data) return <>
@@ -114,7 +137,7 @@ const ProfilePage: NextPage<{ username: string }> = ({username}) => {
                   <IoIosArrowRoundBack size={24} /><p>Go back</p>
                 </button>
               </div>
-              <div className="flex flex-row gap-4 pb-6 border-b border-slate-700 ">
+              <div className="flex flex-row gap-4 pb-4 ">
                 <Image
                   src={data.profileImageUrl}
                   alt="pfp"
@@ -129,13 +152,47 @@ const ProfilePage: NextPage<{ username: string }> = ({username}) => {
                   <div className="flex flex-row gap-2 items-center">
                     <h1 className="text-lg text-slate-300 tracking-wider font-thin">{`@${data.username || ""}`}</h1>
                     <span className="text-slate-300"> · </span>
-                    <h1 className="text-lg text-slate-300 tracking-wider font-thin">{`${count.data || ""} posts`}</h1>
+                    <h1 className="text-lg text-slate-300 tracking-wider font-thin">{`${postCount.data || 0} posts`}</h1>
+                    <span className="text-slate-300"> · </span>
+                    <h1 className="text-lg text-slate-300 tracking-wider font-thin">{`${commentCount.data || 0} comments`}</h1>
                   </div>
                 </div>
               </div>
             </div>
+            <div className="flex flex-row">
+
+              {!!isPosts ?
+                <button className="w-full">
+                  <div className="border-b w-full flex justify-center">
+                    <h1 className="text-xl text-white tracking-wide font-base">Posts</h1>
+                  </div>
+                </button> :
+                <button className="w-full"  onClick={() => setIsPosts(true)}>
+                  <div className="border-b border-slate-700 w-full flex justify-center">
+                    <h1 className="text-xl text-slate-300 tracking-wide font-thin">Posts</h1>
+                  </div>
+                </button>
+              }
+              
+              {!isPosts ? 
+              <button className="w-full" >
+                <div className="border-b w-full flex justify-center">
+                  <h1 className="text-xl text-white tracking-wide font-base">Comments</h1>
+                </div>
+              </button> : 
+              <button className="w-full" onClick={() => setIsPosts(false)} >
+                <div className="border-b border-slate-700 w-full flex justify-center">
+                  <h1 className="text-xl text-slate-300 tracking-wide font-thin">Comments</h1>
+                </div>
+              </button>}
+              
+
+            </div>
             <div>
-              <ProfileFeed userId={data.id} />
+              {!!isPosts ?
+              <ProfilePostFeed userId={data.id} /> :
+              <ProfileCommentFeed userId={data.id} />
+              }    
             </div>
           </div>
         </div>
