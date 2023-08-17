@@ -232,7 +232,6 @@ export default function Home() {
       <Head>
         <title>Home / KBDSpace</title>
         <meta name="description" content="KBDSpace is a mechanical keyboard discussion forum for enthusiasts!" />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
 
