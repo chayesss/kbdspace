@@ -119,7 +119,7 @@ const CommentView = (props: CommentWithUser & { isFullComment: boolean }) => {
                   </button>
                   {!!toggleEdit &&
                     <div>
-                      <div className="mx-auto bg-black opacity-60 w-screen h-screen z-40 fixed inset-0 flex items-center"></div>
+                      <div className="mx-auto bg-black opacity-60 w-screen h-screen z-40 fixed inset-0 flex items-center" onClick={() => setToggleEdit(false)}></div>
                       <AnimatePresence>
                         <motion.div className="mx-auto bg-gradient-to-b from-gray-950 to-gray-900 shadow-2xl shadow-black rounded-b-lg h-[29.5rem] z-50 p-8 sm:w-3/4 lg:w-[44rem] fixed inset-0"
                           initial={{ y: '-100%' }}
@@ -180,7 +180,7 @@ const CommentView = (props: CommentWithUser & { isFullComment: boolean }) => {
                   </button>
                   {!!toggleDelete &&
                     <div>
-                      <div className="mx-auto bg-black opacity-60 w-screen h-screen z-40 fixed inset-0 flex items-center"></div>
+                      <div className="mx-auto bg-black opacity-60 w-screen h-screen z-40 fixed inset-0 flex items-center" onClick={() => setToggleDelete(false)}></div>
                       <AnimatePresence>
                         <motion.div className="mx-auto bg-gradient-to-b from-gray-950 to-gray-900 shadow-2xl shadow-black rounded-b-lg h-[10rem] z-50 p-8 sm:w-3/4 lg:w-[44rem] fixed inset-0"
                           initial={{ y: '-100%' }}
