@@ -117,7 +117,7 @@ const PostsManager = () => {
               <div className="w-1/2 flex flex-col">
                 <label className="text-2xl pb-4 font-semibold" htmlFor="title">Title*</label>
                 <input
-                  className="border-2 border-slate-800 bg-transparent rounded-md pb-1 focus:outline-none focus:ring-0 focus:border-slate-400 focus:bg-gray-950 peer"
+                  className="border-2 border-slate-800 pl-2 bg-transparent rounded-md pb-1 focus:outline-none focus:ring-0 focus:border-slate-400 focus:bg-gray-950 peer"
                   type="text"
                   placeholder=" Title"
                   value={title}

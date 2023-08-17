@@ -79,34 +79,6 @@ export const commentsRouter = createTRPCRouter({
     })
   ),
 
-  create: privateProcedure.input(z.object({
-    postId: z.string(),
-    content: z.string().min(1).max(15000),
-  })).mutation(async ({ ctx, input }) => {
-
-    const authorId = ctx.userId;
-
-    const { success } = await ratelimit.limit(authorId);
-
-    if (!success) {
-      throw new TRPCError({
-        code: "TOO_MANY_REQUESTS",
-        message: "You have exceeded the rate limit."
-      });
-    }
-
-    const comment = await ctx.prisma.comment.create({
-      data: {
-        authorId,
-        postId: input.postId,
-        content: input.content,
-      },
-    })
-
-    return comment;
-
-  }),
-
   getByUserId: publicProcedure.input(
     z.object({
       userId: z.string()
@@ -118,6 +90,34 @@ export const commentsRouter = createTRPCRouter({
       orderBy: [{ createdAt: "desc" }],
     }).then(addUserDataToComments),
     ),
+
+    create: privateProcedure.input(z.object({
+      postId: z.string(),
+      content: z.string().min(1).max(15000),
+    })).mutation(async ({ ctx, input }) => {
+  
+      const authorId = ctx.userId;
+  
+      const { success } = await ratelimit.limit(authorId);
+  
+      if (!success) {
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "You have exceeded the rate limit."
+        });
+      }
+  
+      const comment = await ctx.prisma.comment.create({
+        data: {
+          authorId,
+          postId: input.postId,
+          content: input.content,
+        },
+      })
+  
+      return comment;
+  
+    }),
 
   delete: privateProcedure.input(z.object({
     commentId: z.string().min(1),

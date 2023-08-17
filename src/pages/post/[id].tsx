@@ -12,8 +12,7 @@ import dynamic from "next/dynamic";
 import 'react-quill/dist/quill.snow.css';
 import { useRouter } from "next/router"
 import { useState } from "react";
-
-import {  motion } from "framer-motion";
+import { useUser } from "@clerk/nextjs";
 
 import { LoadingSpinner } from "~/components/loading";
 import { TfiCommentAlt } from "react-icons/tfi";
@@ -58,13 +57,18 @@ export const getStaticPaths = () => {
 const CommentDisplay: NextPage<{ id: string }> = ({ id }) => {
 
   const { data } = api.comments.getAll.useQuery({ postId: id });
+  
 
   if (!data) return <LoadingSpinner />
+
+  if (data.length === 0) return <div className="flex w-full justify-center pt-4 gap-4 ">
+    <p className="text-slate-300">No comments yet</p>
+  </div>
 
   return (
     <div className="flex flex-col gap-4 ">
       {data?.map((fullComment) => (
-        <CommentView {...fullComment} key={fullComment.comment.id}  />))}
+        <CommentView {...fullComment} key={fullComment.comment.id} isFullComment={true} />))}
     </div>
   )
 
@@ -74,6 +78,7 @@ const CommentDisplay: NextPage<{ id: string }> = ({ id }) => {
 const CreateComment: NextPage<{ id: string }> = ({ id }) => {
 
   const ctx = api.useContext();
+  const { isSignedIn } = useUser();
 
   const { mutate } = api.comments.create.useMutation({
     onSuccess: () => {
@@ -92,34 +97,25 @@ const CreateComment: NextPage<{ id: string }> = ({ id }) => {
 
   const [isCommenting, setIsCommenting] = useState(false);
 
-  const variants = {
-    closed: {
-      height: 0,
-    },
-    open: {
-      height: 'auto',
-    },
-  };
 
   return (
     <div className=" flex flex-col p-2 gap-4 w-full">
 
       <div className="flex flex-row items-center p-2">
-        <button className="w-[12rem] flex flex-row items-center text-lg gap-2" onClick={() => setIsCommenting(true)}>
-          <TfiCommentAlt size={20} /><p>Leave a Comment</p>
-        </button>
+        {!!isSignedIn ?
+          <button className="w-[12rem] flex flex-row items-center text-lg gap-2" onClick={() => setIsCommenting(true)}>
+            <TfiCommentAlt size={20} /><p>Leave a Comment</p>
+          </button> :
+          <button className="w-[16rem] text-slate-400 flex flex-row items-center text-lg cursor-not-allowed gap-2" disabled >
+            <TfiCommentAlt size={20} /><p>Sign in to leave a comment</p>
+          </button>
+        }
         <div className="flex-grow"></div>
         <p className="text-lg font-thin">{commentCount.data || 0} comments</p>
       </div>
 
       {!!isCommenting &&
-        <motion.div className=" flex flex-col p-2 gap-4 w-full"
-        key="createComment"
-        initial="closed"
-        animate="open"
-        exit="closed"
-        variants={variants}
-        >
+        <div className=" flex flex-col p-2 gap-4 w-full">
 
 
           <ReactQuill
@@ -156,7 +152,7 @@ const CreateComment: NextPage<{ id: string }> = ({ id }) => {
             </div>
           </div>
 
-        </motion.div>
+        </div>
       }
 
 

@@ -81,7 +81,7 @@ const ProfileCommentFeed = (props: { userId: string }) => {
   return (
     <div className="flex flex-col gap-4 mt-6">
       {data?.map((fullPost) => (
-        <CommentView {...fullPost} key={fullPost.comment.id}  />))}
+        <CommentView {...fullPost} key={fullPost.comment.id} isFullComment={false}  />))}
     </div> 
   ) 
 
@@ -149,7 +149,7 @@ const ProfilePage: NextPage<{ username: string }> = ({username}) => {
                   <div>
                     <h1 className="text-2xl text-white tracking-widest font-bold">{data.fullname}</h1>
                   </div>
-                  <div className="flex flex-row gap-2 items-center">
+                  <div className="flex flex-row gap-2 flex-wrap items-center">
                     <h1 className="text-lg text-slate-300 tracking-wider font-thin">{`@${data.username || ""}`}</h1>
                     <span className="text-slate-300"> · </span>
                     <h1 className="text-lg text-slate-300 tracking-wider font-thin">{`${postCount.data || 0} posts`}</h1>

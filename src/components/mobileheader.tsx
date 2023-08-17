@@ -71,9 +71,9 @@ export const MobileHeader = () => {
 
     <div className="border-b-2 bg-gradient-to-r from-gray-950 to-gray-900 fixed w-full top-0 border-slate-800 lg:hidden">
       <div className="flex flex-row ml-4 mr-4 mt-4 mb-2 lg:hidden">
-        <div>
+        <Link href="/">
           <MyLogo width="200" height="40" />
-        </div>
+        </Link>
         <div className="flex-grow"></div>
 
         {/*MOBILE MENU*/}

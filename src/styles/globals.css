@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-    @apply bg-gradient-to-tl from-gray-900 via-gray-950 to-black text-slate-100;
+    @apply bg-gradient-to-tl from-gray-900 via-gray-950 to-black bg-no-repeat bg-cover bg-fixed  text-slate-100;
 }
 
 
