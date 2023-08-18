@@ -23,12 +23,15 @@ body {
   }
 }
 
+.break-anywhere {
+ overflow-wrap: anywhere;
+}
 
 .ql-toolbar.ql-snow {
   @apply !bg-gray-900 !border !border-gray-700 !rounded-t-md;
 }
 .ql-container {
-    @apply !border !border-gray-700 !border-t-0 !rounded-b-md ;
+    @apply !border !border-gray-700 !border-t-0 !rounded-b-md;
 }
 
 .ql-toolbar .ql-stroke {
@@ -80,11 +83,15 @@ body {
 }
 
 .post h1 {
-    @apply !text-2xl !text-slate-300 !font-bold;
+    @apply !text-2xl !text-slate-300 !font-bold !break-words;
 }
 
+.post {
+    @apply !text-base !text-slate-300 !break-words;
+    }
+
 .post h2 {
-    @apply !text-xl !text-slate-300 !font-bold;
+    @apply !text-xl !text-slate-300 !font-bold !break-words;
 }
 
 .post h3 {

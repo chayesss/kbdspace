@@ -34,10 +34,12 @@ const CommentView = (props: CommentWithUser & { isFullComment: boolean }) => {
   const { mutate: deleteComment } = api.comments.delete.useMutation({
     onSuccess: () => {
       void ctx.comments.getAll.invalidate({ postId: comment.postId });
-      toast.success("Post deleted");
+      void ctx.comments.getByUserId.invalidate({  });
+      void ctx.comments.countByUserId.invalidate({  });
+      toast.success("Comment deleted");
     },
     onError: () => {
-      toast.error("Error deleting post");
+      toast.error("Error deleting comment");
     }
   });
 
@@ -101,14 +103,14 @@ const CommentView = (props: CommentWithUser & { isFullComment: boolean }) => {
                 </div>
                 {!isFullComment &&
                   <div className="flex gap-2">
-                    <span className="font-thin"> on <Link className="text-white font-semibold" href={`/post/${comment.postId || ""}`}>{postData.data?.post.title}</Link> by <Link className="text-white font-semibold" href={`/@${postData.data?.author.username || ""}`}>{`@${postData.data?.author.username || ""}`}</Link></span>
+                    <span className="font-thin break-anywhere">  <Link className="text-white font-semibold" href={`/post/${comment.postId || ""}`}>{postData.data?.post.title}</Link> by <Link className="text-white font-semibold" href={`/@${postData.data?.author.username || ""}`}>{`@${postData.data?.author.username || ""}`}</Link></span>
                   </div>
                 }
 
               </div>
             </div>
             <div className="post">
-              <span dangerouslySetInnerHTML={{ __html: comment.content }}></span>
+              <span className="break-anywhere" dangerouslySetInnerHTML={{ __html: comment.content }}></span>
             </div>
             <hr className=" border-slate-600 mt-1" />
             <div className="flex flex-row gap-2 items-center text-slate-300">

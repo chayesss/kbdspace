@@ -39,6 +39,19 @@ const PostView = (props: PostWithUser & { isFullPost: boolean }) => {
     }
   });
 
+  const { mutate: deletePostComments } = api.comments.deleteByPostId.useMutation({
+    onSuccess: () => {
+      void ctx.posts.getAll.invalidate();
+      void ctx.posts.count.invalidate();
+      void ctx.posts.getByUserId.invalidate();
+      void ctx.comments.getAll.invalidate();
+      void ctx.comments.getByUserId.invalidate();
+    },
+    onError: () => {
+      toast.error("Error deleting comments");
+    }
+  });
+
   const [title, setTitle] = useState(post.title);
   const [content, setContent] = useState(post.content);
   const [tag, setTag] = useState(post.tag);
@@ -124,16 +137,16 @@ const PostView = (props: PostWithUser & { isFullPost: boolean }) => {
       <div className="flex flex-col gap-1">
         <div className="text-xl text-white font-semibold">
           <Link href={`/post/${post.id}`}>
-            <span>{post.title}</span>
+            <span className="break-anywhere">{post.title}</span>
           </Link>
 
         </div>
         {(!!isContentExceeded && !isFullPost) ?
-          <div className="post">
-            <span dangerouslySetInnerHTML={{ __html: displayWords.join(" ") + "... <a href='/post/" + post.id + "' class='inline hover:underline'>Read more</a>" }}></span>
+          <div className="post break-anywhere">
+            <span className="break-anywhere" dangerouslySetInnerHTML={{ __html: displayWords.join(" ") + "... <a href='/post/" + post.id + "' class='inline hover:underline'>Read more</a>" }}></span>
           </div> :
-          <div className="post">
-            <span dangerouslySetInnerHTML={{ __html: rawContent }}></span>
+          <div className="post break-anywhere">
+            <span className="break-anywhere" dangerouslySetInnerHTML={{ __html: rawContent }}></span>
           </div>
         }
 
@@ -218,18 +231,18 @@ const PostView = (props: PostWithUser & { isFullPost: boolean }) => {
                         className="h-[12rem] pb-8"
                       />
                       <div className="hidden sm:flex justify-end">
-                        {count > 2000 &&
+                        {count > 10000 &&
                           <p className="text-red-500">
-                            {count}/2000
+                            {count}/10000
                           </p>}
-                        {count <= 2000 &&
+                        {count <= 10000 &&
                           <p className="text-slate-300">
-                            {count}/2000
+                            {count}/10000
                           </p>
                         }
 
                       </div>
-                      {(count > 0 && count < 2000) && (titleCount > 0 && titleCount < 250) && (tag !== "") ?
+                      {(count > 0 && count <= 10000) && (titleCount > 0 && titleCount <= 250) && (tag !== "") ?
                         <button className="bg-sky-400 hover:bg-sky-600 duration-150 text-white font-bold py-2 px-4 border border-sky-700 rounded mt-2 " onClick={() => { editPost({ postId: post.id, title: title, content: content, tag: tag }); setToggleEdit(false); }}>
                           Edit Post
                         </button> :
@@ -272,7 +285,7 @@ const PostView = (props: PostWithUser & { isFullPost: boolean }) => {
                       </div>
                       <div className="flex-grow"></div>
                       <div className="flex flex-row justify-end">
-                        <button className="bg-red-700 hover:bg-red-800 duration-150  text-slate-50 font-bold py-2 px-4 border border-slate-700 rounded mr-4 ml-4 mt-2 mb-2" onClick={() => { deletePost({ postId: post.id }); setToggleDelete(false); }}>
+                        <button className="bg-red-700 hover:bg-red-800 duration-150  text-slate-50 font-bold py-2 px-4 border border-slate-700 rounded mr-4 ml-4 mt-2 mb-2" onClick={() => { deletePost({ postId: post.id }); deletePostComments({ postId: post.id}); setToggleDelete(false); }}>
                           Delete
                         </button>
                         <button className="bg-slate-50 hover:bg-slate-200 duration-150 text-slate-900 font-bold py-2 px-4 border border-slate-700 rounded mr-4 ml-4 mt-2 mb-2" onClick={() => setToggleDelete(false)}>
