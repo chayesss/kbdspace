@@ -1,12 +1,11 @@
 # KBDSpace
 
-[See it live here: https://kbdspace-eosin.vercel.app/](https://kbdspace-eosin.vercel.app/)
-
+[See it live here: https://kbd-space.vercel.app/](https://kbd-space.vercel.app/)
 ## What is this?
 
 KBDSpace is a project a built using [create-t3-app](https://create.t3.gg)
 
-I wanted to create a full-stack forum app, similar to Reddit and Twitter, to demonstrate my skills as a developer. 
+I wanted to create a full-stack web app, similar to Reddit and Twitter, to demonstrate my skills as a developer. 
 
 Features Include:
 - Home page for post browsing
