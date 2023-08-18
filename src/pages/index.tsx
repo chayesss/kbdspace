@@ -113,9 +113,9 @@ const PostsManager = () => {
             </div>
             <div className=" flex flex-col gap-4 w-full">
               <hr className=" border-slate-600 mt-2" />
-              <p>All fields marked with * are required</p>
+              <p>All fields marked with <span className="text-red-500">*</span>  are required</p>
               <div className="w-1/2 flex flex-col">
-                <label className="text-2xl pb-4 font-semibold" htmlFor="title">Title*</label>
+                <label className="text-2xl pb-4 font-semibold" htmlFor="title">Title<span className="text-red-500">*</span></label>
                 <input
                   className="border-2 border-slate-800 pl-2 bg-transparent rounded-md pb-1 focus:outline-none focus:ring-0 focus:border-slate-400 focus:bg-gray-950 peer"
                   type="text"
@@ -138,7 +138,7 @@ const PostsManager = () => {
                 </div>
               </div>
 
-              <label className="text-2xl font-semibold" htmlFor="tag">Tag*</label>
+              <label className="text-2xl font-semibold" htmlFor="tag">Tag<span className="text-red-500">*</span></label>
               <select
                 className="block py-2.5 w-1/6 px-1 text-sm bg-transparent border-2 rounded-md border-slate-800 focus:outline-none focus:ring-0 focus:border-slate-400 focus:bg-gray-950 peer"
                 name="tag"
@@ -154,12 +154,12 @@ const PostsManager = () => {
                 <option value="Question">Question</option>
                 <option value="Announcement">Announcement</option>
               </select>
-              <label className="text-2xl font-semibold" htmlFor="content">Content*</label>
+              <label className="text-2xl font-semibold" htmlFor="content">Content<span className="text-red-500">*</span></label>
               <ReactQuill
                 id="content"
                 value={content}
                 onChange={(e) => { setContent(e); setCount(e.replace(/(<([^>]+)>)/gi, "").length) }}
-                className="h-[12rem] pb-8"
+                className="h-[12rem] pb-16 sm:pb-8"
               />
               <div className="hidden sm:flex justify-end">
                 {count > 10000 &&
@@ -174,7 +174,7 @@ const PostsManager = () => {
 
               </div>
               {(count > 0 && count <= 10000) && (titleCount > 0 && titleCount <= 250) && (tag !== "") ?
-                <button className="bg-sky-400 hover:bg-sky-600 duration-150 text-white font-bold py-2 px-4 border border-sky-700 rounded mt-2 mb-2" onClick={() => mutate({ title: title, content: content, tag: tag })}>
+                <button className="bg-sky-400 hover:bg-sky-600 duration-150 text-white font-bold py-2 px-4 border border-sky-700 rounded mt-2 mb-2" disabled={isPosting} onClick={() => mutate({ title: title, content: content, tag: tag })}>
                   Post
                 </button> :
                 <button className="bg-sky-800 duration-150 text-slate-400 cursor-not-allowed font-bold py-2 px-4 border border-sky-700 rounded mt-2 mb-2" disabled >

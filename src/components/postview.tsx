@@ -103,7 +103,7 @@ const PostView = (props: PostWithUser & { isFullPost: boolean }) => {
           />
         </Link>
 
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col">
           <div className="flex flex-row gap-2">
             <div className="flex flex-row gap-2">
               <Link href={`/@${author.username || ""}`}><span className="font-semibold hover:underline">@{author.username}</span></Link>
@@ -111,25 +111,16 @@ const PostView = (props: PostWithUser & { isFullPost: boolean }) => {
             </div>
             <div className="flex flex-row gap-2">
               <span className="font-thin">{`  ${dayjs(post.createdAt).fromNow()}`} </span>
-              <span className="hidden sm:flex"> · </span>
             </div>
-            <span className="hidden items-center sm:flex">
-              {post.tag == "News" && <div className="p-1 pt-0 pb-0 mt-0 mb-0 rounded  text-green-500"><p>News</p></div>}
-              {post.tag == "Miscellaneous" && <div className="p-0.5 pt-0 pb-0 rounded  text-pink-500">Miscellaneous</div>}
-              {post.tag == "Discussion" && <div className="p-0.5 pt-0 pb-0 rounded text-blue-500">Discussion</div>}
-              {post.tag == "Question" && <div className="p-0.5 pt-0 pb-0 rounded  text-purple-600">Question</div>}
-              {post.tag == "Announcement" && <div className="p-0.5 pt-0 pb-0 rounded  text-red-600">Announcement</div>}
-              {post.tag == "Feedback" && <div className="p-0.5 pt-0 pb-0 rounded  text-yellow-500">Feedback</div>}
-            </span>
           </div>
           <div className="flex flex-row gap-2">
-            <span className="flex sm:hidden">
-              {post.tag == "News" && <div className="p-0.5 rounded  text-green-500"><p>News</p></div>}
-              {post.tag == "Miscellaneous" && <div className="p-0.5 rounded  text-pink-500">Miscellaneous</div>}
-              {post.tag == "Discussion" && <div className="p-0.5 rounded  text-blue-500">Discussion</div>}
-              {post.tag == "Question" && <div className="p-0.5 rounded  text-purple-600">Question</div>}
-              {post.tag == "Announcement" && <div className="p-0.5 rounded  text-red-600">Announcement</div>}
-              {post.tag == "Feedback" && <div className="p-0.5 rounded text-yellow-500">Feedback</div>}
+            <span className="flex">
+              {post.tag == "News" && <div className="px-0.5  rounded  text-green-500"><p>News</p></div>}
+              {post.tag == "Miscellaneous" && <div className="px-0.5  rounded  text-pink-500">Miscellaneous</div>}
+              {post.tag == "Discussion" && <div className="px-0.5  rounded  text-blue-500">Discussion</div>}
+              {post.tag == "Question" && <div className="px-0.5  rounded  text-purple-600">Question</div>}
+              {post.tag == "Announcement" && <div className="px-0.5  rounded  text-red-600">Announcement</div>}
+              {post.tag == "Feedback" && <div className="px-0.5  rounded text-yellow-500">Feedback</div>}
             </span>
           </div>
         </div>

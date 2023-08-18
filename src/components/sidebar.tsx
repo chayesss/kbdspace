@@ -66,7 +66,7 @@ export const SideBar = () => {
 
     return (
         <div className="fixed z-20 w-[22rem] top-6">
-            <div className="sticky p-2 flex justify-center">
+            <div className="sticky p-2 mt-3 flex justify-center">
                 <Link href="/">
                     <MyLogo />
                 </Link>
