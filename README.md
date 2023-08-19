@@ -10,6 +10,7 @@ I wanted to create a full-stack web app, similar to Reddit and Twitter, to demon
 Features Include:
 - Home page for post browsing
 - Create/Edit/Delete posts
+- Commenting
 - User profiles
 - Dedicated post pages 
 - Secure authentication and session management with Clerk
@@ -17,7 +18,6 @@ Features Include:
 
 Here are some features that were intentionally left out as they did not fit my desired scope for the project:
 - Filtering/Sorting
-- Commenting
 - Direct Messaging
 - Moderation Tools
 
